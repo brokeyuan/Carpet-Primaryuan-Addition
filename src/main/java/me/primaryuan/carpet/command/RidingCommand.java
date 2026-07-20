@@ -40,7 +40,15 @@ public class RidingCommand {
 
     private static boolean isAdmin(CommandSourceStack source) {
         if (!source.isPlayer()) return true;
-        return source.hasPermission(4);
+        try {
+            Object permissions = source.permissions();
+            if (permissions instanceof Integer) {
+                return (Integer) permissions >= 4;
+            }
+            return net.minecraft.commands.Commands.LEVEL_OWNERS.check(permissions);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private static int rideOn(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
