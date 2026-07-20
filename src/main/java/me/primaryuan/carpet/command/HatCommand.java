@@ -29,13 +29,18 @@ public class HatCommand {
     private static boolean isAdmin(CommandSourceStack source) {
         if (!source.isPlayer()) return true;
         try {
-            Object permissions = source.permissions();
-            if (permissions instanceof Integer) {
-                return (Integer) permissions >= 4;
-            }
-            return net.minecraft.commands.Commands.LEVEL_OWNERS.check(permissions);
+            java.lang.reflect.Method hasPermissionMethod = source.getClass().getMethod("hasPermission", int.class);
+            return (Boolean) hasPermissionMethod.invoke(source, 4);
         } catch (Exception e) {
-            return false;
+            try {
+                Object permissions = source.permissions();
+                if (permissions instanceof Integer) {
+                    return (Integer) permissions >= 4;
+                }
+                return net.minecraft.commands.Commands.LEVEL_OWNERS.check(permissions);
+            } catch (Exception e2) {
+                return false;
+            }
         }
     }
 
