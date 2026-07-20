@@ -40,10 +40,10 @@ public class RidingCommand {
 
     private static boolean isAdmin(CommandSourceStack source) {
         if (!source.isPlayer()) return true;
-        //#if MC > 12110
-        //$$ return Commands.LEVEL_OWNERS.check(source.permissions());
+        //#if MC <= 12110
+        //$$ return source.hasPermission(4);
         //#else
-        return source.hasPermission(4);
+        return Commands.LEVEL_OWNERS.check(source.permissions());
         //#endif
     }
 
