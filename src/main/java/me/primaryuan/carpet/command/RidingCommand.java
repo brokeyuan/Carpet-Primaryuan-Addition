@@ -51,7 +51,7 @@ public class RidingCommand {
         ServerPlayer player = context.getSource().getPlayerOrException();
 
         EntitiesRidingPlayersHandler.setRidePermission(player.getName().getString(), true);
-        player.sendSystemMessage(Component.literal("§a已允许其他玩家骑乘你"));
+        broadcast(player, "§a" + player.getName().getString() + " 玩家允许被骑乘了");
         return 1;
     }
 
@@ -59,7 +59,7 @@ public class RidingCommand {
         ServerPlayer player = context.getSource().getPlayerOrException();
 
         EntitiesRidingPlayersHandler.setRidePermission(player.getName().getString(), false);
-        player.sendSystemMessage(Component.literal("§a已禁止其他玩家骑乘你"));
+        broadcast(player, "§c" + player.getName().getString() + " 玩家禁止被骑乘了");
         return 1;
     }
 
@@ -67,7 +67,7 @@ public class RidingCommand {
         ServerPlayer player = context.getSource().getPlayerOrException();
 
         EntitiesRidingPlayersHandler.setPickupPermission(player.getName().getString(), true);
-        player.sendSystemMessage(Component.literal("§a已允许其他玩家捡起你"));
+        broadcast(player, "§a" + player.getName().getString() + " 玩家允许被捡起了");
         return 1;
     }
 
@@ -75,7 +75,17 @@ public class RidingCommand {
         ServerPlayer player = context.getSource().getPlayerOrException();
 
         EntitiesRidingPlayersHandler.setPickupPermission(player.getName().getString(), false);
-        player.sendSystemMessage(Component.literal("§a已禁止其他玩家捡起你"));
+        broadcast(player, "§c" + player.getName().getString() + " 玩家禁止被捡起了");
         return 1;
+    }
+
+    /**
+     * 向全服玩家广播消息
+     */
+    private static void broadcast(ServerPlayer source, String message) {
+        Component component = Component.literal(message);
+        for (ServerPlayer p : source.getServer().getPlayerList().getPlayers()) {
+            p.sendSystemMessage(component);
+        }
     }
 }
