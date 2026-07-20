@@ -507,7 +507,8 @@ public class TppCommand {
         } else {
             message = message.append(Component.translatable("carpetprimaryuan.command.tpp.rules_no_station_counts")).append(Component.literal("\n"));
         }
-        source.sendSuccess(() -> message, false);
+        final MutableComponent finalMessage = message;
+        source.sendSuccess(() -> finalMessage, false);
         return 1;
     }
 
