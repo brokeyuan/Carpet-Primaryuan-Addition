@@ -1,0 +1,68 @@
+plugins {
+	id 'maven-publish'
+	id 'fabric-loom' version '1.15.3' apply false
+	id 'net.fabricmc.fabric-loom-remap' version '1.15.3' apply false
+
+	// https://github.com/ReplayMod/preprocessor
+	// https://github.com/Fallen-Breath/preprocessor
+	id 'com.replaymod.preprocess' version 'c5abb4fb12'
+}
+
+preprocess {
+	strictExtraMappings = false
+
+	def mc121    = createNode('1.21',   1_21_00, '')
+	def mc1211   = createNode('1.21.1',  1_21_01, '')
+	def mc1213   = createNode('1.21.3',  1_21_03, '')
+	def mc1214   = createNode('1.21.4',  1_21_04, '')
+	def mc1215   = createNode('1.21.5',  1_21_05, '')
+	def mc1218   = createNode('1.21.8',  1_21_08, '')
+	def mc12110  = createNode('1.21.10', 1_21_10, '')
+	def mc12111  = createNode('1.21.11', 1_21_11, '')
+	def mc260102 = createNode('26.1.2',  26_01_02, '')
+	def mc260200 = createNode('26.2',    26_02_00, '')
+
+	// 链式连接相邻版本
+	mc121.link(mc1211,    file('versions/mapping-1.21-1.21.1.txt'))
+	mc1211.link(mc1213,   file('versions/mapping-1.21.1-1.21.3.txt'))
+	mc1213.link(mc1214,   file('versions/mapping-1.21.3-1.21.4.txt'))
+	mc1214.link(mc1215,   file('versions/mapping-1.21.4-1.21.5.txt'))
+	mc1215.link(mc1218,   file('versions/mapping-1.21.5-1.21.8.txt'))
+	mc1218.link(mc12110,  file('versions/mapping-1.21.8-1.21.10.txt'))
+	mc12110.link(mc12111, file('versions/mapping-1.21.10-1.21.11.txt'))
+	mc12111.link(mc260102,file('versions/mapping-1.21.11-26.1.2.txt'))
+	mc260102.link(mc260200,file('versions/mapping-26.1.2-26.2.txt'))
+
+	for (final def node in getNodes()) {
+		findProject(node.project).ext.mcVersion = node.mcVersion
+	}
+}
+
+tasks.register('buildAndGather') {
+	subprojects {
+		dependsOn project.tasks.named('build').get()
+	}
+	doFirst {
+		println 'Gathering builds'
+		def buildLibs = {
+			p -> p.buildDir.toPath().resolve('libs')
+		}
+		delete fileTree(buildLibs(rootProject)) {
+			include '*'
+		}
+		subprojects {
+			copy {
+				from(buildLibs(project)) {
+					include '*.jar'
+					exclude '*-dev.jar', '*-sources.jar', '*-shadow.jar'
+				}
+				into buildLibs(rootProject)
+				duplicatesStrategy = DuplicatesStrategy.INCLUDE
+			}
+		}
+	}
+}
+
+tasks.withType(JavaCompile) {
+	options.compilerArgs << '-Xlint:-processing'
+}

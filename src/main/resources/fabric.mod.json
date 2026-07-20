@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "id": "carpet-pry-addition",
+  "version": "${version}",
+
+  "name": "Carpet PRY Addition",
+  "description": "Primaryuan Server's Carpet Addition",
+  "authors": [
+    "Brokeyuan"
+  ],
+  "contact": {
+    "sources": "https://github.com/brokeyuan/Carpet-Primaryuan-Addition"
+  },
+
+  "license": "LGPL-3.0",
+  "icon": "icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "me.primaryuan.carpet.CarpetPrimaryuanMod"
+    ],
+    "client": [
+      "me.primaryuan.carpet.CarpetPrimaryuanClient"
+    ]
+  },
+  "mixins": [
+    "carpet-primaryuan.mixins.json"
+  ],
+  "accessWidener": "carpet-primaryuan.accesswidener",
+
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "carpet": "${carpet_dependency}",
+    "minecraft": "${minecraft_dependency}"
+  },
+  "suggests": {
+    "skinrestorer": "${skinrestorer_dependency}",
+    "xaerolib": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "parent": "carpet",
+      "update_checker": true,
+      "links": {
+        "modmenu.QQGroup": "https://qm.qq.com/q/Ez582Z5P0c"
+      }
+    }
+  }
+}

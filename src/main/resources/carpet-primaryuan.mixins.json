@@ -1,0 +1,28 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.primaryuan.carpet.mixins",
+  "compatibilityLevel": "JAVA_{{COMPATIBILITY_LEVEL}}",
+  "mixins": [
+    "rule.entitiesRidingPlayers.EntityMixin",
+    "rule.entitiesRidingPlayers.RideCommandMixin",
+    "rule.entitiesRidingPlayers.PlayerMixin",
+    "rule.invisibleInTallGrass.PlayerMixin",
+    "rule.entitiesRidingPlayers.ServerPlayerMixin",
+    "rule.fakePlayerNameSuggestions.PlayerCommandMixin",
+    "rule.fakePlayerSkin.PlayerCommandSkinMixin",
+    "rule.sleepingDuringTheDay.MixinServerLevel",
+    "rule.sleepingDuringTheDay.MixinPlayer",
+    "rule.sleepingDuringTheDay.MixinPlayerBase",
+    "rule.unicodeArgument.StringReaderUnicodeSupportMixin",
+    "rule.xaerolibFix.PlayerConfigChannelPermissionUpdaterMixin",
+    "rule.playerhat.LivingEntityMixin",
+    "rule.betterSnowBall.SnowballMixin"
+  ],
+  "client": [
+    "rule.entitiesRidingPlayers.ProjectileUtilMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
