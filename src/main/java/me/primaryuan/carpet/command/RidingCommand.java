@@ -40,17 +40,11 @@ public class RidingCommand {
 
     private static boolean isAdmin(CommandSourceStack source) {
         if (!source.isPlayer()) return true;
-        try {
-            net.minecraft.server.level.ServerPlayer player = source.getPlayerOrException();
-            java.io.File opsFile = new java.io.File("ops.json");
-            if (opsFile.exists() && java.nio.file.Files.isReadable(opsFile.toPath())) {
-                String content = java.nio.file.Files.readString(opsFile.toPath());
-                return content.contains(player.getUUID().toString()) || content.contains(player.getName().getString());
-            }
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
+        //#if MC >= 12111
+        //$$ return Commands.LEVEL_OWNERS.check(source.permissions());
+        //#else
+        return source.hasPermission(4);
+        //#endif
     }
 
     private static int rideOn(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
