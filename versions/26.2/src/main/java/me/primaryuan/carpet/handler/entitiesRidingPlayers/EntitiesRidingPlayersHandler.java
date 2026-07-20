@@ -1,7 +1,10 @@
 package me.primaryuan.carpet.handler.entitiesRidingPlayers;
 
 import me.primaryuan.carpet.CarpetPrimaryuanSettings;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
+import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -34,6 +37,11 @@ public class EntitiesRidingPlayersHandler {
 
             String targetName = targetPlayer.getName().getString();
             if (Boolean.FALSE.equals(ridePermission.get(targetName))) {
+                if (player instanceof ServerPlayer serverPlayer) {
+                    Component subtitle = Component.literal("§c" + targetName + " 玩家禁止被骑乘");
+                    serverPlayer.connection.send(new ClientboundSetSubtitleTextPacket(subtitle));
+                    serverPlayer.connection.send(new ClientboundSetTitleTextPacket(Component.empty()));
+                }
                 return InteractionResult.PASS;
             }
 
@@ -63,6 +71,11 @@ public class EntitiesRidingPlayersHandler {
 
             String targetName = targetPlayer.getName().getString();
             if (Boolean.FALSE.equals(pickupPermission.get(targetName))) {
+                if (player instanceof ServerPlayer serverPlayer) {
+                    Component subtitle = Component.literal("§c" + targetName + " 玩家禁止被捡起");
+                    serverPlayer.connection.send(new ClientboundSetSubtitleTextPacket(subtitle));
+                    serverPlayer.connection.send(new ClientboundSetTitleTextPacket(Component.empty()));
+                }
                 return InteractionResult.PASS;
             }
 

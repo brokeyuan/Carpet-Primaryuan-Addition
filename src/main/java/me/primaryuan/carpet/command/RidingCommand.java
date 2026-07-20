@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 public class RidingCommand {
@@ -43,35 +44,46 @@ public class RidingCommand {
         return net.minecraft.commands.Commands.LEVEL_OWNERS.check(source.permissions());
     }
 
+    private static void broadcastToAllPlayers(MinecraftServer server, Component message) {
+        if (server == null) return;
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            player.sendSystemMessage(message);
+        }
+    }
+
     private static int rideOn(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
+        String playerName = player.getName().getString();
 
-        EntitiesRidingPlayersHandler.setRidePermission(player.getName().getString(), true);
-        player.sendSystemMessage(Component.literal("§a已允许其他玩家骑乘你"));
+        EntitiesRidingPlayersHandler.setRidePermission(playerName, true);
+        broadcastToAllPlayers(player.getServer(), Component.literal("§a" + playerName + " 玩家允许被骑乘了"));
         return 1;
     }
 
     private static int rideOff(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
+        String playerName = player.getName().getString();
 
-        EntitiesRidingPlayersHandler.setRidePermission(player.getName().getString(), false);
-        player.sendSystemMessage(Component.literal("§a已禁止其他玩家骑乘你"));
+        EntitiesRidingPlayersHandler.setRidePermission(playerName, false);
+        broadcastToAllPlayers(player.getServer(), Component.literal("§c" + playerName + " 玩家禁止被骑乘了"));
         return 1;
     }
 
     private static int pickupOn(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
+        String playerName = player.getName().getString();
 
-        EntitiesRidingPlayersHandler.setPickupPermission(player.getName().getString(), true);
-        player.sendSystemMessage(Component.literal("§a已允许其他玩家捡起你"));
+        EntitiesRidingPlayersHandler.setPickupPermission(playerName, true);
+        broadcastToAllPlayers(player.getServer(), Component.literal("§a" + playerName + " 玩家允许被捡起了"));
         return 1;
     }
 
     private static int pickupOff(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
+        String playerName = player.getName().getString();
 
-        EntitiesRidingPlayersHandler.setPickupPermission(player.getName().getString(), false);
-        player.sendSystemMessage(Component.literal("§a已禁止其他玩家捡起你"));
+        EntitiesRidingPlayersHandler.setPickupPermission(playerName, false);
+        broadcastToAllPlayers(player.getServer(), Component.literal("§c" + playerName + " 玩家禁止被捡起了"));
         return 1;
     }
 }
