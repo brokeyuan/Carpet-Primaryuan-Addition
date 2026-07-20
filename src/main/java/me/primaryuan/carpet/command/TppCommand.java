@@ -13,6 +13,7 @@ import net.minecraft.commands.Commands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
@@ -492,7 +493,7 @@ public class TppCommand {
      */
     private static int showRules(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
-        Component message = Component.empty()
+        MutableComponent message = Component.empty()
                 .append(Component.translatable("carpetprimaryuan.command.tpp.rules_header"))
                 .append(Component.literal("\n"))
                 .append(Component.translatable("carpetprimaryuan.command.tpp.rules_global_count", TppConfigManager.useCount))
