@@ -6,13 +6,38 @@ apply plugin: unobfuscated ? 'net.fabricmc.fabric-loom' : 'net.fabricmc.fabric-l
 apply plugin: 'com.replaymod.preprocess'
 
 repositories {
+	maven { url = 'https://api.modrinth.com/maven' }
 	maven { url = 'https://masa.dy.fi/maven' }
 	mavenCentral()
-	maven { url = 'https://maven.fabricmc.net/' }
 	maven {
 		name = 'ParchmentMC'
 		url = 'https://maven.parchmentmc.org'
 	}
+	maven {
+		url = 'https://maven.fallenbreath.me/jitpack'
+		content { includeGroupAndSubgroups('com.github') }
+	}
+	maven { url = "https://maven.bawnorton.com/releases" }
+	maven {
+		url = 'https://maven.fallenbreath.me/releases'
+		content { includeGroupAndSubgroups("me.fallenbreath") }
+	}
+	maven {
+		url = 'https://www.cursemaven.com'
+		content { includeGroup('curse.maven') }
+	}
+	maven {
+		url = 'https://maven.terraformersmc.com/releases/'
+		content { includeGroupAndSubgroups("com.terraformersmc") }
+	}
+	maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+	maven { url = 'https://maven.nucleoid.xyz/' }
+	maven {
+		url = "https://masa.dy.fi/maven/sakura-ryoko"
+		content { includeGroupAndSubgroups("fi.dy.masa") }
+	}
+	maven { url = 'https://jitpack.io' }
+	maven { url = 'https://maven.fabricmc.net/' }
 	flatDir { dirs '../../libs' }
 }
 
@@ -25,12 +50,14 @@ dependencies {
 	def processDependency = { dep ->
 		if (dep instanceof ModuleDependency && !(dep.group == 'net.fabricmc' && dep.name == 'fabric-loader')) {
 			dep.exclude group: 'net.fabricmc', module: 'fabric-loader'
+			dep.exclude group: 'com.github.astei', module: 'lazydfu'
+			dep.exclude group: 'com.github.2No2Name', module: 'McTester'
 		}
 		return dep
 	}
 	def autoImplementation = { Object... args -> processDependency(unobfuscated ? implementation(*args) : modImplementation(*args)) }
-
-	// Minecraft
+	def autoCompileOnly = { Object... args -> processDependency(unobfuscated ? compileOnly(*args) : modCompileOnly(*args)) }
+	def autoRuntimeOnly = { Object... args -> processDependency(unobfuscated ? runtimeOnly(*args) : modRuntimeOnly(*args)) }
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	if (!unobfuscated) {
 		mappings loom.layered() {
@@ -38,11 +65,60 @@ dependencies {
 			parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}@zip")
 		}
 	}
-
+	include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.5.3")))
+	if (!unobfuscated) {
+		include(autoImplementation("net.fabricmc:tiny-mappings-parser:0.3.0+build.17"))
+	}
 	autoImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	autoImplementation ("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}")
-	autoImplementation ("carpet:fabric-carpet:${project.carpet_core_version}") { exclude group: "net.fabricmc.fabric-api" }
-	// skinrestorer: 仅在未禁用时引入（26.1.2 暂无对应 JAR）
+	if (!unobfuscated) {
+		if (mcVersion < 12003) {
+			autoCompileOnly ("com.github.End-Tech:syncmatica:${project.syncmatica_version}") {
+				exclude group: "net.fabricmc.fabric-api"
+			}
+		} else {
+			autoCompileOnly ("com.github.sakura-ryoko:syncmatica:${project.syncmatica_version}") {
+				exclude group: "net.fabricmc.fabric-api"
+			}
+		}
+	}
+	include(autoImplementation("me.fallenbreath:conditional-mixin-fabric:0.6.4")) {
+		exclude group: "net.fabricmc.fabric-api"
+		transitive = false
+	}
+	if (!unobfuscated) {
+		autoRuntimeOnly ('me.fallenbreath:mixin-auditor:0.2.0-u') {
+			exclude group: "net.fabricmc.fabric-api"
+		}
+	} else {
+		autoRuntimeOnly ('me.fallenbreath:mixin-auditor:0.2.0-o') {
+			exclude group: "net.fabricmc.fabric-api"
+		}
+	}
+	if (unobfuscated) {
+		if (mcVersion == 260200) {
+			include(implementation(name: 'ryansrenderingkit', version: '1.2.0+26.2'))
+		} else {
+			include(implementation(name: 'ryansrenderingkit', version: '1.2.0+26.1.2'))
+		}
+	} else if (mcVersion >= 12110) {
+		include(autoImplementation("io.github.hotpad100c:ryansrenderingkit:${project.ryansrenderingkit_version}"))
+	} else {
+		include(autoImplementation("io.github.hotpad100c:ryansrenderingkit:${project.ryansrenderingkit_version}")) {
+			exclude group: "net.fabricmc.fabric-api"
+		}
+	}
+	if (mcVersion >= 12006) {
+		autoCompileOnly(project.lithium_dependency) {
+			exclude group: "net.fabricmc.fabric-api"
+		}
+	}
+	autoImplementation ("carpet:fabric-carpet:${project.carpet_core_version}") {
+		exclude group: "net.fabricmc.fabric-api"
+	}
+	autoCompileOnly(project.starlight_dependency) {
+		exclude group: "net.fabricmc.fabric-api"
+	}
 	if (!project.skinrestorer_name.startsWith('_disabled_')) {
 		autoImplementation(name: project.skinrestorer_name)
 	}
@@ -56,9 +132,21 @@ JavaVersion MIXIN_COMPATIBILITY_LEVEL = JAVA_COMPATIBILITY
 
 loom {
 	accessWidenerPath = file("src/main/resources/carpet-primaryuan.accesswidener")
+	def commonVmArgs = ['-Dmixin.debug.export=true', '-Dmixin.debug.countInjections=false']
 	runConfigs.configureEach {
 		ideConfigGenerated = true
 		runDir '../../run'
+		vmArgs commonVmArgs
+	}
+	runs {
+		serverMixinAudit {
+			server()
+			vmArgs(*commonVmArgs, '-DmixinAuditor.audit=true')
+		}
+		clientMixinAudit {
+			client()
+			vmArgs(*commonVmArgs, '-DmixinAuditor.audit=true', '-DmixinAuditor.when=game_init')
+		}
 	}
 }
 
@@ -67,8 +155,8 @@ String artifactVersion = project.mod_version
 String artifactVersionSuffix = ''
 if (System.getenv("BUILD_RELEASE") != "true") {
 	String buildNumber = System.getenv("BUILD_ID")
-	modVersionSuffix += buildNumber != null ? ('+build.' + buildNumber) : ''
-	artifactVersionSuffix = ''
+	modVersionSuffix += buildNumber != null ? ('+build.' + buildNumber) : '-SNAPSHOT'
+	artifactVersionSuffix = '-SNAPSHOT'
 }
 String fullModVersion = project.mod_version + modVersionSuffix
 String fullProjectVersion, fullArtifactVersion
@@ -120,6 +208,9 @@ java {
 
 jar {
 	from(rootProject.file('LICENSE')) {
+		rename { "${it}" }
+	}
+	from(rootProject.file('NOTICE')) {
 		rename { "${it}" }
 	}
 }

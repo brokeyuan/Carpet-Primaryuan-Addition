@@ -46,6 +46,10 @@
       "links": {
         "modmenu.QQGroup": "https://qm.qq.com/q/Ez582Z5P0c"
       }
+    },
+    "lithium:options": {
+      "mixin.world.block_entity_ticking.sleeping.furnace": false,
+      "mixin.world.block_entity_ticking.sleeping.chest_animation": false
     }
   }
 }
