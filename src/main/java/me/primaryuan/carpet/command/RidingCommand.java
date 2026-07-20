@@ -51,7 +51,7 @@ public class RidingCommand {
         ServerPlayer player = context.getSource().getPlayerOrException();
 
         EntitiesRidingPlayersHandler.setRidePermission(player.getName().getString(), true);
-        broadcast(context.getSource(), "§a" + player.getName().getString() + " 玩家允许被骑乘了");
+        broadcast(context.getSource(), Component.translatable("carpetprimaryuan.command.ride.allow_ride", player.getName().getString()));
         return 1;
     }
 
@@ -59,7 +59,7 @@ public class RidingCommand {
         ServerPlayer player = context.getSource().getPlayerOrException();
 
         EntitiesRidingPlayersHandler.setRidePermission(player.getName().getString(), false);
-        broadcast(context.getSource(), "§c" + player.getName().getString() + " 玩家禁止被骑乘了");
+        broadcast(context.getSource(), Component.translatable("carpetprimaryuan.command.ride.disallow_ride", player.getName().getString()));
         return 1;
     }
 
@@ -67,7 +67,7 @@ public class RidingCommand {
         ServerPlayer player = context.getSource().getPlayerOrException();
 
         EntitiesRidingPlayersHandler.setPickupPermission(player.getName().getString(), true);
-        broadcast(context.getSource(), "§a" + player.getName().getString() + " 玩家允许被捡起了");
+        broadcast(context.getSource(), Component.translatable("carpetprimaryuan.command.ride.allow_pickup", player.getName().getString()));
         return 1;
     }
 
@@ -75,17 +75,16 @@ public class RidingCommand {
         ServerPlayer player = context.getSource().getPlayerOrException();
 
         EntitiesRidingPlayersHandler.setPickupPermission(player.getName().getString(), false);
-        broadcast(context.getSource(), "§c" + player.getName().getString() + " 玩家禁止被捡起了");
+        broadcast(context.getSource(), Component.translatable("carpetprimaryuan.command.ride.disallow_pickup", player.getName().getString()));
         return 1;
     }
 
     /**
      * 向全服玩家广播消息
      */
-    private static void broadcast(CommandSourceStack source, String message) {
-        Component component = Component.literal(message);
+    private static void broadcast(CommandSourceStack source, Component message) {
         for (ServerPlayer p : source.getServer().getPlayerList().getPlayers()) {
-            p.sendSystemMessage(component);
+            p.sendSystemMessage(message);
         }
     }
 }

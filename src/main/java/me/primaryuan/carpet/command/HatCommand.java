@@ -39,7 +39,7 @@ public class HatCommand {
         ServerPlayer player = context.getSource().getPlayerOrException();
 
         if (!CarpetPrimaryuanSettings.playerhat) {
-            player.sendSystemMessage(Component.literal("§c帽子功能未启用，请联系管理员使用 /carpet playerhat true 开启"));
+            player.sendSystemMessage(Component.translatable("carpetprimaryuan.command.hat.disabled"));
             return 0;
         }
 
@@ -47,7 +47,7 @@ public class HatCommand {
         ItemStack headSlotItem = player.getItemBySlot(EquipmentSlot.HEAD);
 
         if (mainHandItem.isEmpty()) {
-            player.sendSystemMessage(Component.literal("§c请手持要戴的物品"));
+            player.sendSystemMessage(Component.translatable("carpetprimaryuan.command.hat.empty_hand"));
             return 0;
         }
 
@@ -55,7 +55,7 @@ public class HatCommand {
         player.setItemInHand(InteractionHand.MAIN_HAND, headSlotItem);
 
         String itemName = mainHandItem.getDisplayName().getString();
-        player.sendSystemMessage(Component.literal("§a已将 " + itemName + " 戴在头上"));
+        player.sendSystemMessage(Component.translatable("carpetprimaryuan.command.hat.equipped", itemName));
 
         return 1;
     }

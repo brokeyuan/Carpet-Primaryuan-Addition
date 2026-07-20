@@ -32,8 +32,8 @@
 
 ## 文档
 
-- [规则](docs/rules.md)
-- [命令](docs/commands.md)
+- [规则](docs/rules.md) | [Rules](docs/rules_en.md)
+- [命令](docs/commands.md) | [Commands](docs/commands_en.md)
 
 ## 下载
 

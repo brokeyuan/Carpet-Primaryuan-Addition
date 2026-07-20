@@ -138,7 +138,7 @@ public class TppCommand {
         ServerPlayer player = source.getPlayerOrException();
 
         if (!CarpetPrimaryuanSettings.TppFakePlayer) {
-            player.sendSystemMessage(Component.literal("§c假人珍珠传送功能未开启。请管理员使用 /carpet TppFakePlayer true 开启。"));
+            player.sendSystemMessage(Component.translatable("carpetprimaryuan.command.tpp.disabled"));
             return 0;
         }
 
@@ -147,14 +147,14 @@ public class TppCommand {
         // 解析输入（可能是内部名或显示名）为内部名
         String station = TppConfigManager.getInternalName(input);
         if (station == null) {
-            player.sendSystemMessage(Component.literal("§c站点 '" + input + "' 不存在。可用站点: " + String.join(", ", TppConfigManager.getDisplayNames())));
+            player.sendSystemMessage(Component.translatable("carpetprimaryuan.command.tpp.station_not_found", input, String.join(", ", TppConfigManager.getDisplayNames())));
             return 0;
         }
 
         String playerName = player.getGameProfile().getName();
         String fakePlayerName = buildFakePlayerName(playerName, station);
 
-        source.sendSuccess(() -> Component.literal("正在传送到站点: " + TppConfigManager.getDisplayName(station) + " (" + fakePlayerName + ")"), false);
+        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.teleporting", TppConfigManager.getDisplayName(station), fakePlayerName), false);
 
         new Thread(() -> {
             try {
@@ -191,7 +191,7 @@ public class TppCommand {
                 if (!joined) {
                     server.execute(() -> {
                         player.sendSystemMessage(
-                                Component.literal("§c传送失败: 假人 " + fakePlayerName + " 未能在超时前上线")
+                                Component.translatable("carpetprimaryuan.command.tpp.teleport_failed", fakePlayerName)
                         );
                     });
                     return;
@@ -221,7 +221,7 @@ public class TppCommand {
                     );
 
                     player.sendSystemMessage(
-                            Component.literal("§a传送完成: " + TppConfigManager.getDisplayName(station))
+                            Component.translatable("carpetprimaryuan.command.tpp.teleport_complete", TppConfigManager.getDisplayName(station))
                     );
                 });
 
@@ -230,7 +230,7 @@ public class TppCommand {
                 var srv = source.getServer();
                 srv.execute(() -> {
                     player.sendSystemMessage(
-                            Component.literal("§c传送被中断")
+                            Component.translatable("carpetprimaryuan.command.tpp.teleport_interrupted")
                     );
                 });
             }
@@ -248,7 +248,7 @@ public class TppCommand {
         ServerPlayer player = source.getPlayerOrException();
 
         if (!CarpetPrimaryuanSettings.TppFakePlayer) {
-            player.sendSystemMessage(Component.literal("§c假人珍珠传送功能未开启。请管理员使用 /carpet TppFakePlayer true 开启。"));
+            player.sendSystemMessage(Component.translatable("carpetprimaryuan.command.tpp.disabled"));
             return 0;
         }
 
@@ -257,14 +257,14 @@ public class TppCommand {
         // 解析输入（可能是内部名或显示名）为内部名
         String station = TppConfigManager.getInternalName(input);
         if (station == null) {
-            player.sendSystemMessage(Component.literal("§c站点 '" + input + "' 不存在。可用站点: " + String.join(", ", TppConfigManager.getDisplayNames())));
+            player.sendSystemMessage(Component.translatable("carpetprimaryuan.command.tpp.station_not_found", input, String.join(", ", TppConfigManager.getDisplayNames())));
             return 0;
         }
 
         String playerName = player.getGameProfile().getName();
         String fakePlayerName = buildFakePlayerName(playerName, station);
 
-        source.sendSuccess(() -> Component.literal("正在生成假人: " + fakePlayerName + " (2秒后)..."), false);
+        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.fake_player_spawning", fakePlayerName), false);
 
         new Thread(() -> {
             try {
@@ -277,7 +277,7 @@ public class TppCommand {
                             "/player " + fakePlayerName + " spawn"
                     );
                     player.sendSystemMessage(
-                            Component.literal("§a已生成假人: " + fakePlayerName)
+                            Component.translatable("carpetprimaryuan.command.tpp.fake_player_spawned", fakePlayerName)
                     );
                 });
             } catch (InterruptedException e) {
@@ -285,7 +285,7 @@ public class TppCommand {
                 var srv = source.getServer();
                 srv.execute(() -> {
                     player.sendSystemMessage(
-                            Component.literal("§c生成假人被中断")
+                            Component.translatable("carpetprimaryuan.command.tpp.teleport_interrupted")
                     );
                 });
             }
@@ -301,7 +301,7 @@ public class TppCommand {
         CommandSourceStack source = context.getSource();
 
         if (!isAdmin(source)) {
-            source.sendFailure(Component.literal("§c此命令仅管理员可用"));
+            source.sendFailure(Component.translatable("carpetprimaryuan.command.tpp.admin_only"));
             return 0;
         }
 
@@ -309,14 +309,14 @@ public class TppCommand {
 
         if (TppConfigManager.stationMap.containsKey(name)) {
             String existingDisplay = TppConfigManager.getDisplayName(name);
-            source.sendSuccess(() -> Component.literal("§e站点 '" + name + "' 已存在（显示名: " + existingDisplay + "）"), false);
+            source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.station_exists", name, existingDisplay), false);
             return 0;
         }
 
         TppConfigManager.stationMap.put(name, null);
         TppConfigManager.save();
 
-        source.sendSuccess(() -> Component.literal("§a已添加站点: " + name), false);
+        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.station_added", name), false);
         return 1;
     }
 
@@ -327,7 +327,7 @@ public class TppCommand {
         CommandSourceStack source = context.getSource();
 
         if (!isAdmin(source)) {
-            source.sendFailure(Component.literal("§c此命令仅管理员可用"));
+            source.sendFailure(Component.translatable("carpetprimaryuan.command.tpp.admin_only"));
             return 0;
         }
 
@@ -336,15 +336,14 @@ public class TppCommand {
 
         if (TppConfigManager.stationMap.containsKey(name)) {
             String existingDisplay = TppConfigManager.getDisplayName(name);
-            source.sendSuccess(() -> Component.literal("§e站点 '" + name + "' 已存在（显示名: " + existingDisplay + "）"), false);
+            source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.station_exists", name, existingDisplay), false);
             return 0;
         }
 
         TppConfigManager.stationMap.put(name, displayName);
         TppConfigManager.save();
 
-        source.sendSuccess(() -> Component.literal(
-                "§a已添加站点: " + name + " (显示名: " + displayName + ")"), false);
+        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.station_added_with_display", name, displayName), false);
         return 1;
     }
 
@@ -355,7 +354,7 @@ public class TppCommand {
         CommandSourceStack source = context.getSource();
 
         if (!isAdmin(source)) {
-            source.sendFailure(Component.literal("§c此命令仅管理员可用"));
+            source.sendFailure(Component.translatable("carpetprimaryuan.command.tpp.admin_only"));
             return 0;
         }
 
@@ -363,14 +362,14 @@ public class TppCommand {
         String internalName = TppConfigManager.getInternalName(input);
 
         if (internalName == null) {
-            source.sendSuccess(() -> Component.literal("§c站点 '" + input + "' 不存在"), false);
+            source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.station_not_exists", input), false);
             return 0;
         }
 
         TppConfigManager.stationMap.remove(internalName);
         TppConfigManager.save();
 
-        source.sendSuccess(() -> Component.literal("§a已移除站点: " + internalName), false);
+        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.station_removed", internalName), false);
         return 1;
     }
 
@@ -381,7 +380,7 @@ public class TppCommand {
         CommandSourceStack source = context.getSource();
 
         if (!isAdmin(source)) {
-            source.sendFailure(Component.literal("§c此命令仅管理员可用"));
+            source.sendFailure(Component.translatable("carpetprimaryuan.command.tpp.admin_only"));
             return 0;
         }
 
@@ -389,25 +388,23 @@ public class TppCommand {
         String alias = context.getArgument(ALIAS_ARG, String.class);
 
         if (playerName.isEmpty()) {
-            source.sendSuccess(() -> Component.literal("§c玩家名不能为空"), false);
+            source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.player_name_empty"), false);
             return 0;
         }
         if (alias.isEmpty()) {
-            source.sendSuccess(() -> Component.literal("§c别名不能为空"), false);
+            source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.alias_empty"), false);
             return 0;
         }
 
         if (alias.length() > 12) {
-            source.sendSuccess(() -> Component.literal("§c别名过长（最多12字符），当前: " + alias.length()), false);
+            source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.alias_too_long", alias.length()), false);
             return 0;
         }
 
         TppConfigManager.aliases.put(playerName, alias);
         TppConfigManager.save();
 
-        source.sendSuccess(() -> Component.literal(
-                "§a已为玩家 '" + playerName + "' 设置别名: " + alias +
-                " (假人名格式: " + alias + "_<地区>)"), false);
+        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.alias_set", playerName, alias, alias), false);
         return 1;
     }
 
@@ -418,21 +415,21 @@ public class TppCommand {
         CommandSourceStack source = context.getSource();
 
         if (!isAdmin(source)) {
-            source.sendFailure(Component.literal("§c此命令仅管理员可用"));
+            source.sendFailure(Component.translatable("carpetprimaryuan.command.tpp.admin_only"));
             return 0;
         }
 
         String playerName = context.getArgument(PLAYER_ARG, String.class);
 
         if (!TppConfigManager.aliases.containsKey(playerName)) {
-            source.sendSuccess(() -> Component.literal("§e玩家 '" + playerName + "' 没有设置别名"), false);
+            source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.no_alias", playerName), false);
             return 0;
         }
 
         TppConfigManager.aliases.remove(playerName);
         TppConfigManager.save();
 
-        source.sendSuccess(() -> Component.literal("§a已移除玩家 '" + playerName + "' 的别名"), false);
+        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.alias_removed", playerName), false);
         return 1;
     }
 
@@ -443,7 +440,7 @@ public class TppCommand {
         CommandSourceStack source = context.getSource();
 
         if (!isAdmin(source)) {
-            source.sendFailure(Component.literal("§c此命令仅管理员可用"));
+            source.sendFailure(Component.translatable("carpetprimaryuan.command.tpp.admin_only"));
             return 0;
         }
 
@@ -451,7 +448,7 @@ public class TppCommand {
         TppConfigManager.useCount = count;
         TppConfigManager.save();
 
-        source.sendSuccess(() -> Component.literal("§a已设置右键次数: " + count), false);
+        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.use_count_set_global", count), false);
         return 1;
     }
 
@@ -460,10 +457,13 @@ public class TppCommand {
      */
     private static int showRules(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
-        source.sendSuccess(() -> Component.literal(
-                "§e=== TPP 规则配置 ===\n" +
-                "§7右键次数: §f" + TppConfigManager.useCount
-        ), false);
+        Component message = Component.empty()
+                .append(Component.translatable("carpetprimaryuan.command.tpp.rules_header"))
+                .append(Component.literal("\n"))
+                .append(Component.translatable("carpetprimaryuan.command.tpp.rules_global_count", TppConfigManager.useCount))
+                .append(Component.literal("\n"))
+                .append(Component.translatable("carpetprimaryuan.command.tpp.rules_no_station_counts"));
+        source.sendSuccess(() -> message, false);
         return 1;
     }
 
