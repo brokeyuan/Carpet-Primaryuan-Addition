@@ -5,17 +5,12 @@ import carpet.patches.EntityPlayerMPFake;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.context.CommandContext;
 import me.primaryuan.carpet.CarpetPrimaryuanSettings;
-import net.lionarius.skinrestorer.skin.SkinService;
-import net.lionarius.skinrestorer.skin.SkinVariant;
-import net.lionarius.skinrestorer.skin.provider.SkinProviderContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Collections;
 
 /**
  * PlayerCommandSkinMixin - 1.21.8 版本覆盖
@@ -93,8 +88,17 @@ public class PlayerCommandSkinMixin {
                                                GameProfile targetProfile,
                                                String skinPlayerName) {
         try {
-            SkinProviderContext context = new SkinProviderContext("mojang", skinPlayerName, SkinVariant.SLIM);
-            SkinService.setSkinAsync(server, Collections.singletonList(targetProfile), context, true);
+            Class<?> skinProviderContextClass = Class.forName("net.lionarius.skinrestorer.skin.provider.SkinProviderContext");
+            Class<?> skinVariantClass = Class.forName("net.lionarius.skinrestorer.skin.SkinVariant");
+            Class<?> skinServiceClass = Class.forName("net.lionarius.skinrestorer.skin.SkinService");
+
+            Object slimVariant = skinVariantClass.getField("SLIM").get(null);
+            java.lang.reflect.Constructor<?> contextConstructor = skinProviderContextClass.getConstructor(String.class, String.class, skinVariantClass);
+            Object context = contextConstructor.newInstance("mojang", skinPlayerName, slimVariant);
+
+            java.lang.reflect.Method setSkinAsyncMethod = skinServiceClass.getMethod("setSkinAsync", net.minecraft.server.MinecraftServer.class, java.util.Collection.class, skinProviderContextClass, boolean.class);
+            setSkinAsyncMethod.invoke(null, server, java.util.Collections.singletonList(targetProfile), context, true);
+        } catch (ClassNotFoundException e) {
         } catch (Exception e) {
         }
     }
