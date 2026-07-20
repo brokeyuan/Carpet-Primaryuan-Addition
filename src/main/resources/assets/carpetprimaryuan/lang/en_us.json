@@ -4,7 +4,7 @@
   "carpet.rule.fakePlayerNameSuggestions.name": "Fake Player Name Suggestions",
   "carpet.rule.fakePlayerNameSuggestions.desc": "Customize fake player list suggested by /player command. Use ',' to separate each name",
   "carpet.rule.fakePlayerSkinMode.name": "Fake Player Skin Mode",
-  "carpet.rule.fakePlayerSkinMode.desc": "Set fake player skin. default=no change, summon=use summoner's skin, same_skin=use uniform skin",
+  "carpet.rule.fakePlayerSkinMode.desc": "After installing the skinrestorer dependency, you can set the skin of fake players. default=no change to fake player skin, summon=fake player uses the summoner's skin, same_skin=fake player uses a unified skin",
   "carpet.rule.fakePlayerSkinSet.name": "Fake Player Uniform Skin",
   "carpet.rule.fakePlayerSkinSet.desc": "When fakePlayerSkinMode is same_skin, set the player name used for fake player skins",
   "carpet.rule.xaerolibFix.name": "XaeroLib Fake Player Fix",

@@ -64,12 +64,12 @@ Customize the fake player list suggested by /player. Use ',' to separate each na
 
 ### fakePlayerSkinMode - Fake Player Skin Setting
 
-Set the skin of fake players. default=no change, summon=use the summoner's skin, same_skin=use a unified skin.
+After installing the [skinrestorer](https://modrinth.com/mod/skinrestorer) dependency, you can set the skin of fake players. default=no change to fake player skin, summon=fake player uses the summoner's skin, same_skin=fake player uses a unified skin.
 
 | Property | Value |
 |----------|-------|
 | **Rule Name** | `fakePlayerSkinMode` |
-| **Description** | Set the skin of fake players. default=no change, summon=use the summoner's skin, same_skin=use a unified skin |
+| **Description** | After installing the skinrestorer dependency, you can set the skin of fake players. default=no change to fake player skin, summon=fake player uses the summoner's skin, same_skin=fake player uses a unified skin |
 | **Type** | `string` |
 | **Default Value** | `default` |
 | **Suggested Options** | `default`, `summon`, `same_skin` |
@@ -79,9 +79,9 @@ Set the skin of fake players. default=no change, summon=use the summoner's skin,
 
 | Mode | Behavior |
 |------|----------|
-| `default` | No skin change |
-| `summon` | Use the summoner's skin |
-| `same_skin` | Use a unified skin |
+| `default` | No change to fake player skin |
+| `summon` | Fake player uses the summoner's skin |
+| `same_skin` | Fake player uses a unified skin |
 
 ---
 

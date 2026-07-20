@@ -4,7 +4,7 @@
   "carpet.rule.fakePlayerNameSuggestions.name": "假人名称建议",
   "carpet.rule.fakePlayerNameSuggestions.desc": "自定义/player建议的假人列表。使用','分隔每个名称",
   "carpet.rule.fakePlayerSkinMode.name": "假人皮肤设置",
-  "carpet.rule.fakePlayerSkinMode.desc": "设置假人的皮肤。default=不更改，summon=使用召唤者的皮肤，same_skin=使用统一皮肤",
+  "carpet.rule.fakePlayerSkinMode.desc": "安装前置skinrestorer后，可以设置假人的皮肤。default=不更改假人皮肤，summon=假人使用召唤者的皮肤，same_skin=假人使用统一皮肤",
   "carpet.rule.fakePlayerSkinSet.name": "假人统一皮肤设置",
   "carpet.rule.fakePlayerSkinSet.desc": "当FakeplayersSkinMode为same_skin时，设置用于假人皮肤的玩家名称",
   "carpet.rule.xaerolibFix.name": "假人数据XaeroLib修复",

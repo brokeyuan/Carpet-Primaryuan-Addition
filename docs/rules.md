@@ -64,12 +64,12 @@
 
 ### fakePlayerSkinMode - 假人皮肤设置
 
-设置假人的皮肤。default=不更改，summon=使用召唤者的皮肤，same_skin=使用统一皮肤。
+安装前置 [skinrestorer](https://modrinth.com/mod/skinrestorer) 后，可以设置假人的皮肤。default=不更改假人皮肤，summon=假人使用召唤者的皮肤，same_skin=假人使用统一皮肤。
 
 | 属性 | 值 |
 |------|-----|
 | **规则名** | `fakePlayerSkinMode` |
-| **描述** | 设置假人的皮肤。default=不更改，summon=使用召唤者的皮肤，same_skin=使用统一皮肤 |
+| **描述** | 安装前置skinrestorer后，可以设置假人的皮肤。default=不更改假人皮肤，summon=假人使用召唤者的皮肤，same_skin=假人使用统一皮肤 |
 | **类型** | `string` |
 | **默认值** | `default` |
 | **参考选项** | `default`, `summon`, `same_skin` |
@@ -79,9 +79,9 @@
 
 | 模式 | 行为 |
 |------|------|
-| `default` | 不更改皮肤 |
-| `summon` | 使用召唤者的皮肤 |
-| `same_skin` | 使用统一皮肤 |
+| `default` | 不更改假人皮肤 |
+| `summon` | 假人使用召唤者的皮肤 |
+| `same_skin` | 假人使用统一皮肤 |
 
 ---
 
