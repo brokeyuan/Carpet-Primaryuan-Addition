@@ -84,7 +84,7 @@ public class CarpetPrimaryuanServer implements CarpetExtension {
     @Override
     public Map<String, String> canHasTranslations(String lang) {
         Map<String, String> translations = Maps.newHashMap();
-        String langFile = "/assets/carpetprimaryuan/lang/" + lang.toLowerCase() + ".json";
+        String langFile = "/assets/" + CarpetPrimaryuanMod.getModId() + "/lang/" + lang.toLowerCase() + ".json";
         try (InputStream is = CarpetPrimaryuanServer.class.getResourceAsStream(langFile)) {
             if (is == null) {
                 return translations;
