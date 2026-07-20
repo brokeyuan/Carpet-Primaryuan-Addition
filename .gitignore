@@ -1,0 +1,52 @@
+# gradle
+.gradle/
+build/
+out/
+classes/
+
+# eclipse
+*.launch
+
+# idea
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# vscode
+.settings/
+.vscode/
+bin/
+.classpath
+.project
+
+# macos
+*.DS_Store
+
+# fabric
+run/
+
+# trae
+.trae/
+
+# build logs
+build_log*.txt
+
+# version build outputs
+versions/*/build/
+versions/*/.gradle/
+
+# backup files
+*.bak
+*.swp
+*~
+
+# compiled class files
+*.class
+
+# debug files
+Player_startSleepInBed.txt
+ServerPlayer_startSleepInBed.txt
+
+# local JAR libs
+libs/

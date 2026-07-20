@@ -1,0 +1,107 @@
+name: Bug 报告 | Bug Report
+description: 发现了疑似错误或异常行为 | Report a suspected bug or abnormal behavior
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        💬 **提交前请务必 / Before submitting, please:**
+        - 使用 **最新的开发构建（Dev Build）** 测试； / Use the **latest Dev Build** to test;
+        - 搜索已有 Issue，避免重复。 / Search existing issues to avoid duplicates.
+
+  - type: checkboxes
+    id: verification
+    attributes:
+      label: 预检清单 | Pre-Checklist
+      description: 请确认你已完成以下步骤 | Please confirm you have completed the following steps
+      options:
+        - label: 我已将模组更新至最新测试版，并确认该问题仍然存在。 | I have updated the mod to the latest beta build and confirmed that the issue still persists.
+          required: true
+        - label: 我已搜索现有 Issue，确认这不是重复报告。 | I have searched existing issues and confirmed this is not a duplicate report.
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug 描述 | Bug Description
+      description: |
+        清晰简洁地说明你遇到的问题。是游戏崩溃？行为异常？还是其他错误？如有帮助，请附上截图。
+        Clearly and concisely describe the issue. Is it a crash? Abnormal behavior? Provide screenshots if helpful.
+      placeholder: 告诉我们你看到了什么！ | Tell us what happened!
+    validations:
+      required: true
+
+  - type: textarea
+    id: to-reproduce
+    attributes:
+      label: 复现步骤 | Steps to Reproduce
+      description: |
+        详细描述如何重现此 Bug。
+        Detailed steps to reproduce the bug.
+      placeholder: |
+        1. 创建一个新世界 | Create a new world
+        2. 等待到午夜 | Wait until midnight
+        3. 拥抱一只苦力怕 | Hug a creeper
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: 预期行为 | Expected Behavior
+      description: 你原本期望发生什么？ | What did you expect to happen?
+      placeholder: 苦力怕应该爆炸 | The creeper should explode
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: 实际行为 | Actual Behavior
+      description: 实际发生了什么？ | What actually happened?
+      placeholder: 苦力怕把自己发射到了天上 | The creeper launched itself into the sky
+
+  - type: input
+    id: minecraft-version
+    attributes:
+      label: Minecraft 版本 | Minecraft Version
+      description: 出现此 Bug 的游戏版本 | The version where this bug occurs
+      placeholder: 1.21.1
+    validations:
+      required: true
+
+  - type: input
+    id: mod-version
+    attributes:
+      label: Carpet PRY Addition 版本 | Mod Version
+      description: 出现此 Bug 的模组版本 | The version of the mod
+      placeholder: dev-123 或 v1.2.3
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 相关日志 | Relevant Logs
+      description: |-
+        如果是崩溃问题，请提供 `logs` 文件夹中的最新日志，或 `crash-reports` 中的崩溃报告。
+        If it's a crash, provide logs from the `logs` folder or `crash-reports`.
+        请将日志上传至 [Pastebin](https://pastebin.com/) 或 [mclo.gs](https://mclo.gs/)，并在此粘贴链接。
+        Please upload logs to Pastebin or mclo.gs and paste the link here.
+        ❌ 请勿直接粘贴整份日志内容。/ DO NOT paste full logs directly.
+      placeholder: https://pastebin.com/J6b7lKxR
+
+  - type: textarea
+    id: other-information
+    attributes:
+      label: 其他信息 | Other Information
+      description: |
+        例如：仅在特定规则开启时出现，或者上述提及的冲突模组与最小化复现方案。
+        e.g., Specific game rules enabled, or the aforementioned conflicting mods and MRE.
+      placeholder: 仅当玩家处于生存模式且启用了某规则时才会触发 | Only triggers in survival mode with rule X enabled
+
+  - type: checkboxes
+    id: follow-up
+    attributes:
+      label: 后续跟进 | Follow-up
+      options:
+        - label: 我愿意尝试提交 Pull Request 来解决此 Bug。 | I am willing to try submitting a Pull Request to fix this bug.
+        - label: 我已经仔细阅读过以上内容，并且知道这个选项不用勾选。 | I have carefully read the terms above and know that this checkbox can be left unchecked.

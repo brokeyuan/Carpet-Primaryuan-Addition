@@ -1,0 +1,137 @@
+final int mcVersion = project.mcVersion
+final boolean unobfuscated = mcVersion >= 26_00_00
+
+apply plugin: 'maven-publish'
+apply plugin: unobfuscated ? 'net.fabricmc.fabric-loom' : 'net.fabricmc.fabric-loom-remap'
+apply plugin: 'com.replaymod.preprocess'
+
+repositories {
+	maven { url = 'https://masa.dy.fi/maven' }
+	mavenCentral()
+	maven { url = 'https://maven.fabricmc.net/' }
+	maven {
+		name = 'ParchmentMC'
+		url = 'https://maven.parchmentmc.org'
+	}
+	flatDir { dirs '../../libs' }
+}
+
+// https://github.com/FabricMC/fabric-loader/issues/783
+configurations {
+	modRuntimeOnly.exclude group: 'net.fabricmc', module: 'fabric-loader'
+}
+
+dependencies {
+	def processDependency = { dep ->
+		if (dep instanceof ModuleDependency && !(dep.group == 'net.fabricmc' && dep.name == 'fabric-loader')) {
+			dep.exclude group: 'net.fabricmc', module: 'fabric-loader'
+		}
+		return dep
+	}
+	def autoImplementation = { Object... args -> processDependency(unobfuscated ? implementation(*args) : modImplementation(*args)) }
+
+	// Minecraft
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	if (!unobfuscated) {
+		mappings loom.layered() {
+			officialMojangMappings()
+			parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}@zip")
+		}
+	}
+
+	autoImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	autoImplementation ("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}")
+	autoImplementation ("carpet:fabric-carpet:${project.carpet_core_version}") { exclude group: "net.fabricmc.fabric-api" }
+	// skinrestorer: 仅在未禁用时引入（26.1.2 暂无对应 JAR）
+	if (!project.skinrestorer_name.startsWith('_disabled_')) {
+		autoImplementation(name: project.skinrestorer_name)
+	}
+}
+
+String MIXIN_CONFIG_PATH = 'carpet-primaryuan.mixins.json'
+JavaVersion JAVA_COMPATIBILITY = JavaVersion.VERSION_21
+if (unobfuscated) JAVA_COMPATIBILITY = JavaVersion.VERSION_25
+
+JavaVersion MIXIN_COMPATIBILITY_LEVEL = JAVA_COMPATIBILITY
+
+loom {
+	accessWidenerPath = file("src/main/resources/carpet-primaryuan.accesswidener")
+	runConfigs.configureEach {
+		ideConfigGenerated = true
+		runDir '../../run'
+	}
+}
+
+String modVersionSuffix = ''
+String artifactVersion = project.mod_version
+String artifactVersionSuffix = ''
+if (System.getenv("BUILD_RELEASE") != "true") {
+	String buildNumber = System.getenv("BUILD_ID")
+	modVersionSuffix += buildNumber != null ? ('+build.' + buildNumber) : ''
+	artifactVersionSuffix = ''
+}
+String fullModVersion = project.mod_version + modVersionSuffix
+String fullProjectVersion, fullArtifactVersion
+
+group = project.maven_group
+base.archivesName = project.archives_base_name
+fullProjectVersion = 'v' + project.mod_version + '-mc' + project.minecraft_version + modVersionSuffix
+fullArtifactVersion = artifactVersion + '-mc' + project.minecraft_version + artifactVersionSuffix
+version = fullProjectVersion
+
+processResources {
+	inputs.property "id", project.mod_id
+	inputs.property "name", project.mod_name
+	inputs.property "version", fullModVersion
+	inputs.property "carpet_dependency", project.carpet_dependency
+	inputs.property "minecraft_dependency", project.minecraft_dependency
+	inputs.property "skinrestorer_dependency", project.skinrestorer_dependency
+
+	filesMatching("fabric.mod.json") {
+		def valueMap = [
+				"id": project.mod_id,
+				"name": project.mod_name,
+				"version": fullModVersion,
+				"carpet_dependency": project.carpet_dependency,
+				"minecraft_dependency": project.minecraft_dependency,
+				"skinrestorer_dependency": project.skinrestorer_dependency,
+		]
+		expand valueMap
+	}
+
+	filesMatching(MIXIN_CONFIG_PATH) {
+		filter { s -> s.replace('{{COMPATIBILITY_LEVEL}}', "${MIXIN_COMPATIBILITY_LEVEL.ordinal() + 1}") }
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = "UTF-8"
+	options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+	if (JAVA_COMPATIBILITY <= JavaVersion.VERSION_1_8) {
+		options.compilerArgs << '-Xlint:-options'
+	}
+}
+
+java {
+	sourceCompatibility = JAVA_COMPATIBILITY
+	targetCompatibility = JAVA_COMPATIBILITY
+	withSourcesJar()
+}
+
+jar {
+	from(rootProject.file('LICENSE')) {
+		rename { "${it}" }
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+			artifactId = base.archivesName.get()
+			version = fullArtifactVersion
+		}
+	}
+	repositories {
+	}
+}

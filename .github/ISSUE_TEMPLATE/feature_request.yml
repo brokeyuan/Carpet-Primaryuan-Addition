@@ -1,0 +1,58 @@
+name: 功能建议 | Feature Request
+description: 为本项目提出一个新功能点子 | Suggest a new feature for this project
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        💡 **提交前请先 / Before submitting:**
+        - 搜索已有 Issue，避免重复； / Search existing issues to avoid duplicates;
+        - **下载最新的开发构建（Dev Build）**，确认该功能尚未实现。 / Download the **latest Dev Build** to confirm it hasn't been implemented yet.
+
+  - type: checkboxes
+    id: verification
+    attributes:
+      label: 功能存在性验证 | Feature Verification
+      description: 请确认你已完成以下检查 | Please confirm you have completed the following checks
+      options:
+        - label: 我已下载并测试了最新版本，确认没有此功能。 | I have downloaded and tested the latest version and confirmed this feature is missing.
+          required: true
+        - label: 我已看过最新提交，确认我想要的功能还没有被合并。 | I have reviewed the latest commits and confirmed that my desired feature has not been merged yet.
+          required: true
+        - label: 我已搜索现有 Issue，确认这不是重复的建议。 | I have searched existing issues and confirmed this is not a duplicate request.
+          required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: 动机 | Motivation
+      description: 你为什么想要这个功能？它能解决什么问题？ | Why do you want this feature? What problem does it solve?
+      placeholder: 告诉我们你的想法！ | Tell us your thoughts!
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 功能描述 | Feature Description
+      description: 尽可能详细地描述你希望实现的功能（包括行为、配置方式、命令或规则名称等） | Describe the feature in detail (including behavior, config, commands, or rule names).
+      placeholder: 例如：新增一个 Carpet 规则 `instant-night-skip` | e.g., Add a new Carpet rule `instant-night-skip`
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: willing-to-contribute
+    attributes:
+      label: 参与意愿 | Willingness to Contribute
+      description: 是否愿意协助实现此功能？ | Are you willing to help implement this feature?
+      options:
+        - label: 我愿意尝试提交 Pull Request 来实现此功能。 | I am willing to try submitting a Pull Request to implement this feature.
+        - label: 我已经仔细阅读过以上内容，并且知道这个选项不用勾选。 | I have carefully read the terms above and know that this checkbox can be left unchecked.
+
+  - type: textarea
+    id: other-information
+    attributes:
+      label: 其他信息 | Other Information
+      description: |
+        相关截图、参考模组、技术方案等。若无，请留空。
+        Relevant screenshots, reference mods, technical schemes/proposals, etc. Leave blank if none.
