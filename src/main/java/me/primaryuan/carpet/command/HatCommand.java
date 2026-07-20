@@ -28,7 +28,7 @@ public class HatCommand {
 
     private static boolean isAdmin(CommandSourceStack source) {
         if (!source.isPlayer()) return true;
-        return net.minecraft.commands.Commands.LEVEL_OWNERS.check(source.permissions());
+        return source.hasPermission(4);
     }
 
     private static int execute(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {

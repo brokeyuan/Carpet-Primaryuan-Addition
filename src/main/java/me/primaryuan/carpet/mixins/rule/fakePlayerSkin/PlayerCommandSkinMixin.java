@@ -11,10 +11,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Collections;
-import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
-
 @Mixin(PlayerCommand.class)
 public class PlayerCommandSkinMixin {
 
@@ -83,14 +79,14 @@ public class PlayerCommandSkinMixin {
             Class<?> skinServiceClass = Class.forName("net.lionarius.skinrestorer.skin.SkinService");
 
             Object slimVariant = skinVariantClass.getField("SLIM").get(null);
-            Constructor<?> contextConstructor = skinProviderContextClass.getConstructor(String.class, String.class, skinVariantClass);
+            java.lang.reflect.Constructor<?> contextConstructor = skinProviderContextClass.getConstructor(String.class, String.class, skinVariantClass);
             Object context = contextConstructor.newInstance("mojang", skinPlayerName, slimVariant);
 
-            Method setSkinAsyncMethod = skinServiceClass.getMethod("setSkinAsync", net.minecraft.server.MinecraftServer.class, java.util.Collection.class, skinProviderContextClass, boolean.class);
-            setSkinAsyncMethod.invoke(null, server, Collections.singletonList(targetPlayer), context, true);
+            java.lang.reflect.Method setSkinAsyncMethod = skinServiceClass.getMethod("setSkinAsync", net.minecraft.server.MinecraftServer.class, java.util.Collection.class, skinProviderContextClass, boolean.class);
+            setSkinAsyncMethod.invoke(null, server, java.util.Collections.singletonList(targetPlayer), context, true);
 
             Class<?> playerUtilsClass = Class.forName("net.lionarius.skinrestorer.util.PlayerUtils");
-            Method refreshPlayerMethod = playerUtilsClass.getMethod("refreshPlayer", ServerPlayer.class);
+            java.lang.reflect.Method refreshPlayerMethod = playerUtilsClass.getMethod("refreshPlayer", ServerPlayer.class);
             refreshPlayerMethod.invoke(null, targetPlayer);
 
         } catch (ClassNotFoundException e) {
