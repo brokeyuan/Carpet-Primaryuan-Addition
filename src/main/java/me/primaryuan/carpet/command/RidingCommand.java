@@ -51,39 +51,47 @@ public class RidingCommand {
         }
     }
 
+    private static Component createComponent(String text) {
+        //#if MC >= 260102
+        //$$ return Component.literal(text);
+        //#else
+        return new net.minecraft.network.chat.TextComponent(text);
+        //#endif
+    }
+
     private static int rideOn(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
-        String playerName = player.getName().getString();
+        String playerName = player.getGameProfile().getName();
 
         EntitiesRidingPlayersHandler.setRidePermission(playerName, true);
-        broadcastToAllPlayers(player.getServer(), Component.literal("§a" + playerName + " 玩家允许被骑乘了"));
+        broadcastToAllPlayers(player.getServer(), createComponent("§a" + playerName + " 玩家允许被骑乘了"));
         return 1;
     }
 
     private static int rideOff(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
-        String playerName = player.getName().getString();
+        String playerName = player.getGameProfile().getName();
 
         EntitiesRidingPlayersHandler.setRidePermission(playerName, false);
-        broadcastToAllPlayers(player.getServer(), Component.literal("§c" + playerName + " 玩家禁止被骑乘了"));
+        broadcastToAllPlayers(player.getServer(), createComponent("§c" + playerName + " 玩家禁止被骑乘了"));
         return 1;
     }
 
     private static int pickupOn(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
-        String playerName = player.getName().getString();
+        String playerName = player.getGameProfile().getName();
 
         EntitiesRidingPlayersHandler.setPickupPermission(playerName, true);
-        broadcastToAllPlayers(player.getServer(), Component.literal("§a" + playerName + " 玩家允许被捡起了"));
+        broadcastToAllPlayers(player.getServer(), createComponent("§a" + playerName + " 玩家允许被捡起了"));
         return 1;
     }
 
     private static int pickupOff(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
-        String playerName = player.getName().getString();
+        String playerName = player.getGameProfile().getName();
 
         EntitiesRidingPlayersHandler.setPickupPermission(playerName, false);
-        broadcastToAllPlayers(player.getServer(), Component.literal("§c" + playerName + " 玩家禁止被捡起了"));
+        broadcastToAllPlayers(player.getServer(), createComponent("§c" + playerName + " 玩家禁止被捡起了"));
         return 1;
     }
 }
