@@ -129,7 +129,11 @@ public class TppCommand {
 
     private static boolean isAdmin(CommandSourceStack source) {
         if (!source.isPlayer()) return true;
-        return net.minecraft.commands.Commands.LEVEL_OWNERS.check(source.permissions());
+        //#if MC > 12110
+        //$$ return net.minecraft.commands.Commands.LEVEL_OWNERS.check(source.permissions());
+        //#else
+        return source.hasPermission(4);
+        //#endif
     }
 
     /**

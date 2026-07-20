@@ -15,8 +15,6 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
@@ -129,17 +127,7 @@ public class TppCommand {
      */
     private static boolean isAdmin(CommandSourceStack source) {
         if (!source.isPlayer()) return true;
-        try {
-            ServerPlayer player = source.getPlayerOrException();
-            File opsFile = new File("ops.json");
-            if (opsFile.exists() && Files.isReadable(opsFile.toPath())) {
-                String content = Files.readString(opsFile.toPath());
-                return content.contains(player.getUUID().toString()) || content.contains(player.getGameProfile().getName());
-            }
-            return false;
-        } catch (CommandSyntaxException | java.io.IOException e) {
-            return false;
-        }
+        return source.hasPermission(4);
     }
 
     /**
