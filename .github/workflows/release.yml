@@ -70,12 +70,31 @@ jobs:
           name: build-artifacts
           path: build-artifacts
 
-      - name: Determine release tag
-        id: release_tag
+      - name: Determine release info
+        id: release_info
         run: |
-          TAG="${{ github.event.inputs.target_release_tag || github.ref_name }}"
-          echo "tag=$TAG" >> $GITHUB_OUTPUT
-          echo "Using release tag: $TAG"
+          if [ "$GITHUB_EVENT_NAME" = "release" ]; then
+              echo "tag_name=" >> $GITHUB_OUTPUT
+          elif [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+              echo "tag_name=${{ github.event.inputs.target_release_tag }}" >> $GITHUB_OUTPUT
+          else
+              TAG="${{ github.ref_name }}"
+              echo "tag_name=$TAG" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Read common properties
+        id: properties_g
+        uses: BrycensRanch/read-properties-action@v1
+        with:
+          file: gradle.properties
+          all: true
+
+      - name: Read version-specific properties
+        id: properties_v
+        uses: BrycensRanch/read-properties-action@v1
+        with:
+          file: ${{ format('versions/{0}/gradle.properties', matrix.subproject) }}
+          all: true
 
       - name: Prepare file information
         id: file_info
@@ -93,7 +112,7 @@ jobs:
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.release_tag.outputs.tag }}
+          tag_name: ${{ steps.release_info.outputs.tag_name || github.ref_name }}
           files: ${{ steps.file_info.outputs.path }}
           fail_on_unmatched_files: true
           body: |-
@@ -102,3 +121,30 @@ jobs:
             - File name: `${{ steps.file_info.outputs.name }}`
             - SHA-256: `${{ steps.file_info.outputs.hash }}`
             - Built from: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Publish to Modrinth & CurseForge
+        uses: Kira-NT/mc-publish@v3.3
+        with:
+          modrinth-id: ${{ vars.MODRINTH_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_API_TOKEN }}
+
+          curseforge-id: ${{ vars.CURSEFORGE_ID }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          github-tag: ${{ steps.release_info.outputs.tag_name || github.ref_name }}
+          github-token: ${{ github.token }}
+
+          files: ${{ steps.file_info.outputs.path }}
+
+          name: ${{ format('{0} v{1} for mc{2}', steps.properties_g.outputs.mod_name, steps.properties_g.outputs.mod_version, steps.properties_v.outputs.minecraft_version) }}
+          version: ${{ format('v{1}-mc{0}', steps.properties_v.outputs.minecraft_version, steps.properties_g.outputs.mod_version) }}
+          version-type: release
+
+          loaders: fabric
+          game-versions: ${{ steps.properties_v.outputs.game_versions }}
+          game-version-filter: any
+          dependencies: |-
+            carpet(required)
+            fabric-api(required)
+          retry-attempts: 3
+          retry-delay: 10000

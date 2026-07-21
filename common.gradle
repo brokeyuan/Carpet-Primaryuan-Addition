@@ -46,6 +46,26 @@ dependencies {
 	if (!project.skinrestorer_name.startsWith('_disabled_')) {
 		autoImplementation(name: project.skinrestorer_name)
 	}
+
+	// Mixin Extras
+	include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.5.3")))
+
+	// Conditional Mixin
+	include(autoImplementation("me.fallenbreath:conditional-mixin-fabric:0.6.4")) {
+		exclude group: "net.fabricmc.fabric-api"
+		transitive = false
+	}
+
+	// Mixin Auditor (runtime only, for CI checks)
+	if (!unobfuscated) {
+		autoRuntimeOnly ('me.fallenbreath:mixin-auditor:0.2.0-u') {
+			exclude group: "net.fabricmc.fabric-api"
+		}
+	} else {
+		autoRuntimeOnly ('me.fallenbreath:mixin-auditor:0.2.0-o') {
+			exclude group: "net.fabricmc.fabric-api"
+		}
+	}
 }
 
 String MIXIN_CONFIG_PATH = 'carpet-primaryuan.mixins.json'
@@ -56,9 +76,17 @@ JavaVersion MIXIN_COMPATIBILITY_LEVEL = JAVA_COMPATIBILITY
 
 loom {
 	accessWidenerPath = file("src/main/resources/carpet-primaryuan.accesswidener")
+	def commonVmArgs = ['-Dmixin.debug.export=true', '-Dmixin.debug.countInjections=false']
 	runConfigs.configureEach {
 		ideConfigGenerated = true
 		runDir '../../run'
+		vmArgs commonVmArgs
+	}
+	runs {
+		serverMixinAudit {
+			server()
+			vmArgs(*commonVmArgs, '-DmixinAuditor.audit=true')
+		}
 	}
 }
 
