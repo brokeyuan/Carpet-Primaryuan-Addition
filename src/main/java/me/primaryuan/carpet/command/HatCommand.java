@@ -3,10 +3,10 @@ package me.primaryuan.carpet.command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.primaryuan.carpet.CarpetPrimaryuanSettings;
+import me.primaryuan.carpet.i18n.ServerI18n;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -39,7 +39,7 @@ public class HatCommand {
         ServerPlayer player = context.getSource().getPlayerOrException();
 
         if (!CarpetPrimaryuanSettings.playerhat) {
-            player.sendSystemMessage(Component.translatable("carpetprimaryuan.command.hat.disabled"));
+            player.sendSystemMessage(ServerI18n.tr(player, "carpetprimaryuan.command.hat.disabled"));
             return 0;
         }
 
@@ -47,7 +47,7 @@ public class HatCommand {
         ItemStack headSlotItem = player.getItemBySlot(EquipmentSlot.HEAD);
 
         if (mainHandItem.isEmpty()) {
-            player.sendSystemMessage(Component.translatable("carpetprimaryuan.command.hat.empty_hand"));
+            player.sendSystemMessage(ServerI18n.tr(player, "carpetprimaryuan.command.hat.empty_hand"));
             return 0;
         }
 
@@ -55,7 +55,7 @@ public class HatCommand {
         player.setItemInHand(InteractionHand.MAIN_HAND, headSlotItem);
 
         String itemName = mainHandItem.getDisplayName().getString();
-        player.sendSystemMessage(Component.translatable("carpetprimaryuan.command.hat.equipped", itemName));
+        player.sendSystemMessage(ServerI18n.tr(player, "carpetprimaryuan.command.hat.equipped", itemName));
 
         return 1;
     }

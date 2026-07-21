@@ -1,6 +1,7 @@
 package me.primaryuan.carpet.handler.entitiesRidingPlayers;
 
 import me.primaryuan.carpet.CarpetPrimaryuanSettings;
+import me.primaryuan.carpet.i18n.ServerI18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
@@ -38,7 +39,7 @@ public class EntitiesRidingPlayersHandler {
             String targetName = targetPlayer.getName().getString();
             if (Boolean.FALSE.equals(ridePermission.get(targetName))) {
                 if (player instanceof ServerPlayer serverPlayer) {
-                    Component subtitle = Component.translatable("carpetprimaryuan.command.ride.disallow_ride_subtitle", targetName);
+                    Component subtitle = ServerI18n.tr(serverPlayer, "carpetprimaryuan.command.ride.disallow_ride_subtitle", targetName);
                     serverPlayer.connection.send(new ClientboundSetSubtitleTextPacket(subtitle));
                     serverPlayer.connection.send(new ClientboundSetTitleTextPacket(Component.empty()));
                 }
@@ -72,7 +73,7 @@ public class EntitiesRidingPlayersHandler {
             String targetName = targetPlayer.getName().getString();
             if (Boolean.FALSE.equals(pickupPermission.get(targetName))) {
                 if (player instanceof ServerPlayer serverPlayer) {
-                    Component subtitle = Component.translatable("carpetprimaryuan.command.ride.disallow_pickup_subtitle", targetName);
+                    Component subtitle = ServerI18n.tr(serverPlayer, "carpetprimaryuan.command.ride.disallow_pickup_subtitle", targetName);
                     serverPlayer.connection.send(new ClientboundSetSubtitleTextPacket(subtitle));
                     serverPlayer.connection.send(new ClientboundSetTitleTextPacket(Component.empty()));
                 }

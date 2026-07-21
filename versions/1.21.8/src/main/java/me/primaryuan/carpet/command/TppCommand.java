@@ -7,6 +7,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import me.primaryuan.carpet.CarpetPrimaryuanSettings;
 import me.primaryuan.carpet.TppConfigManager;
+import me.primaryuan.carpet.i18n.ServerI18n;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -138,21 +139,21 @@ public class TppCommand {
         ServerPlayer player = source.getPlayerOrException();
 
         if (!CarpetPrimaryuanSettings.TppFakePlayer) {
-            player.sendSystemMessage(Component.translatable("carpetprimaryuan.command.tpp.disabled"));
+            player.sendSystemMessage(ServerI18n.tr(player, "carpetprimaryuan.command.tpp.disabled"));
             return 0;
         }
 
         String input = context.getArgument(STATION_ARG, String.class);
         String station = TppConfigManager.getInternalName(input);
         if (station == null) {
-            player.sendSystemMessage(Component.translatable("carpetprimaryuan.command.tpp.station_not_found", input, String.join(", ", TppConfigManager.getDisplayNames())));
+            player.sendSystemMessage(ServerI18n.tr(player, "carpetprimaryuan.command.tpp.station_not_found", input, String.join(", ", TppConfigManager.getDisplayNames())));
             return 0;
         }
 
         String playerName = player.getGameProfile().getName();
         String fakePlayerName = buildFakePlayerName(playerName, station);
 
-        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.teleporting", TppConfigManager.getDisplayName(station), fakePlayerName), false);
+        source.sendSuccess(() -> ServerI18n.tr(source, "carpetprimaryuan.command.tpp.teleporting", TppConfigManager.getDisplayName(station), fakePlayerName), false);
 
         new Thread(() -> {
             try {
@@ -188,7 +189,7 @@ public class TppCommand {
                 if (!joined) {
                     server.execute(() -> {
                         player.sendSystemMessage(
-                                Component.translatable("carpetprimaryuan.command.tpp.teleport_failed", fakePlayerName)
+                                ServerI18n.tr(player, "carpetprimaryuan.command.tpp.teleport_failed", fakePlayerName)
                         );
                     });
                     return;
@@ -218,7 +219,7 @@ public class TppCommand {
                             "/player " + fakePlayerName + " kill"
                     );
                     player.sendSystemMessage(
-                            Component.translatable("carpetprimaryuan.command.tpp.teleport_complete", TppConfigManager.getDisplayName(station))
+                            ServerI18n.tr(player, "carpetprimaryuan.command.tpp.teleport_complete", TppConfigManager.getDisplayName(station))
                     );
                 });
 
@@ -227,7 +228,7 @@ public class TppCommand {
                 var srv = source.getServer();
                 srv.execute(() -> {
                     player.sendSystemMessage(
-                            Component.translatable("carpetprimaryuan.command.tpp.teleport_interrupted")
+                            ServerI18n.tr(player, "carpetprimaryuan.command.tpp.teleport_interrupted")
                     );
                 });
             }
@@ -246,7 +247,7 @@ public class TppCommand {
 
         // 检查功能是否开启
         if (!CarpetPrimaryuanSettings.TppFakePlayer) {
-            player.sendSystemMessage(Component.translatable("carpetprimaryuan.command.tpp.disabled"));
+            player.sendSystemMessage(ServerI18n.tr(player, "carpetprimaryuan.command.tpp.disabled"));
             return 0;
         }
 
@@ -255,7 +256,7 @@ public class TppCommand {
         // 解析输入（可能是内部名或显示名）为内部名
         String station = TppConfigManager.getInternalName(input);
         if (station == null) {
-            player.sendSystemMessage(Component.translatable("carpetprimaryuan.command.tpp.station_not_found", input, String.join(", ", TppConfigManager.getDisplayNames())));
+            player.sendSystemMessage(ServerI18n.tr(player, "carpetprimaryuan.command.tpp.station_not_found", input, String.join(", ", TppConfigManager.getDisplayNames())));
             return 0;
         }
 
@@ -268,7 +269,7 @@ public class TppCommand {
                 player.createCommandSourceStack(),
                 "/player " + fakePlayerName + " spawn"
         );
-        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.fake_player_spawned", fakePlayerName), false);
+        source.sendSuccess(() -> ServerI18n.tr(source, "carpetprimaryuan.command.tpp.fake_player_spawned", fakePlayerName), false);
 
         // 步骤 2: 3 秒后以控制台身份 kill 假人下线
         new Thread(() -> {
@@ -293,30 +294,30 @@ public class TppCommand {
      */
     private static int addStation(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
-        if (!isAdmin(source)) { source.sendFailure(Component.translatable("carpetprimaryuan.command.tpp.admin_only")); return 0; }
+        if (!isAdmin(source)) { source.sendFailure(ServerI18n.tr(source, "carpetprimaryuan.command.tpp.admin_only")); return 0; }
         String name = context.getArgument(STATION_ARG, String.class);
         if (TppConfigManager.stationMap.containsKey(name)) {
-            source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.station_exists", name, TppConfigManager.getDisplayName(name)), false);
+            source.sendSuccess(() -> ServerI18n.tr(source, "carpetprimaryuan.command.tpp.station_exists", name, TppConfigManager.getDisplayName(name)), false);
             return 0;
         }
         TppConfigManager.stationMap.put(name, null);
         TppConfigManager.save();
-        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.station_added", name), false);
+        source.sendSuccess(() -> ServerI18n.tr(source, "carpetprimaryuan.command.tpp.station_added", name), false);
         return 1;
     }
 
     private static int addStationWithDisplay(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
-        if (!isAdmin(source)) { source.sendFailure(Component.translatable("carpetprimaryuan.command.tpp.admin_only")); return 0; }
+        if (!isAdmin(source)) { source.sendFailure(ServerI18n.tr(source, "carpetprimaryuan.command.tpp.admin_only")); return 0; }
         String name = context.getArgument(STATION_ARG, String.class);
         String displayName = context.getArgument(DISPLAY_NAME_ARG, String.class);
         if (TppConfigManager.stationMap.containsKey(name)) {
-            source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.station_exists", name, TppConfigManager.getDisplayName(name)), false);
+            source.sendSuccess(() -> ServerI18n.tr(source, "carpetprimaryuan.command.tpp.station_exists", name, TppConfigManager.getDisplayName(name)), false);
             return 0;
         }
         TppConfigManager.stationMap.put(name, displayName);
         TppConfigManager.save();
-        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.station_added_with_display", name, displayName), false);
+        source.sendSuccess(() -> ServerI18n.tr(source, "carpetprimaryuan.command.tpp.station_added_with_display", name, displayName), false);
         return 1;
     }
 
@@ -325,13 +326,13 @@ public class TppCommand {
      */
     private static int removeStation(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
-        if (!isAdmin(source)) { source.sendFailure(Component.translatable("carpetprimaryuan.command.tpp.admin_only")); return 0; }
+        if (!isAdmin(source)) { source.sendFailure(ServerI18n.tr(source, "carpetprimaryuan.command.tpp.admin_only")); return 0; }
         String input = context.getArgument(STATION_ARG, String.class);
         String internalName = TppConfigManager.getInternalName(input);
-        if (internalName == null) { source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.station_not_exists", input), false); return 0; }
+        if (internalName == null) { source.sendSuccess(() -> ServerI18n.tr(source, "carpetprimaryuan.command.tpp.station_not_exists", input), false); return 0; }
         TppConfigManager.stationMap.remove(internalName);
         TppConfigManager.save();
-        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.station_removed", internalName), false);
+        source.sendSuccess(() -> ServerI18n.tr(source, "carpetprimaryuan.command.tpp.station_removed", internalName), false);
         return 1;
     }
 
@@ -342,7 +343,7 @@ public class TppCommand {
         CommandSourceStack source = context.getSource();
 
         if (!isAdmin(source)) {
-            source.sendFailure(Component.translatable("carpetprimaryuan.command.tpp.admin_only"));
+            source.sendFailure(ServerI18n.tr(source, "carpetprimaryuan.command.tpp.admin_only"));
             return 0;
         }
 
@@ -350,23 +351,23 @@ public class TppCommand {
         String alias = context.getArgument(ALIAS_ARG, String.class);
 
         if (playerName.isEmpty()) {
-            source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.player_name_empty"), false);
+            source.sendSuccess(() -> ServerI18n.tr(source, "carpetprimaryuan.command.tpp.player_name_empty"), false);
             return 0;
         }
         if (alias.isEmpty()) {
-            source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.alias_empty"), false);
+            source.sendSuccess(() -> ServerI18n.tr(source, "carpetprimaryuan.command.tpp.alias_empty"), false);
             return 0;
         }
 
         if (alias.length() > 12) {
-            source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.alias_too_long", alias.length()), false);
+            source.sendSuccess(() -> ServerI18n.tr(source, "carpetprimaryuan.command.tpp.alias_too_long", alias.length()), false);
             return 0;
         }
 
         TppConfigManager.aliases.put(playerName, alias);
         TppConfigManager.save();
 
-        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.alias_set", playerName, alias, alias), false);
+        source.sendSuccess(() -> ServerI18n.tr(source, "carpetprimaryuan.command.tpp.alias_set", playerName, alias, alias), false);
         return 1;
     }
 
@@ -377,21 +378,21 @@ public class TppCommand {
         CommandSourceStack source = context.getSource();
 
         if (!isAdmin(source)) {
-            source.sendFailure(Component.translatable("carpetprimaryuan.command.tpp.admin_only"));
+            source.sendFailure(ServerI18n.tr(source, "carpetprimaryuan.command.tpp.admin_only"));
             return 0;
         }
 
         String playerName = context.getArgument(PLAYER_ARG, String.class);
 
         if (!TppConfigManager.aliases.containsKey(playerName)) {
-            source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.no_alias", playerName), false);
+            source.sendSuccess(() -> ServerI18n.tr(source, "carpetprimaryuan.command.tpp.no_alias", playerName), false);
             return 0;
         }
 
         TppConfigManager.aliases.remove(playerName);
         TppConfigManager.save();
 
-        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.alias_removed", playerName), false);
+        source.sendSuccess(() -> ServerI18n.tr(source, "carpetprimaryuan.command.tpp.alias_removed", playerName), false);
         return 1;
     }
 
@@ -402,7 +403,7 @@ public class TppCommand {
         CommandSourceStack source = context.getSource();
 
         if (!isAdmin(source)) {
-            source.sendFailure(Component.translatable("carpetprimaryuan.command.tpp.admin_only"));
+            source.sendFailure(ServerI18n.tr(source, "carpetprimaryuan.command.tpp.admin_only"));
             return 0;
         }
 
@@ -410,7 +411,7 @@ public class TppCommand {
         TppConfigManager.useCount = count;
         TppConfigManager.save();
 
-        source.sendSuccess(() -> Component.translatable("carpetprimaryuan.command.tpp.use_count_set_global", count), false);
+        source.sendSuccess(() -> ServerI18n.tr(source, "carpetprimaryuan.command.tpp.use_count_set_global", count), false);
         return 1;
     }
 
@@ -420,11 +421,11 @@ public class TppCommand {
     private static int showRules(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
         Component message = Component.empty()
-                .append(Component.translatable("carpetprimaryuan.command.tpp.rules_header"))
+                .append(ServerI18n.tr(source, "carpetprimaryuan.command.tpp.rules_header"))
                 .append(Component.literal("\n"))
-                .append(Component.translatable("carpetprimaryuan.command.tpp.rules_global_count", TppConfigManager.useCount))
+                .append(ServerI18n.tr(source, "carpetprimaryuan.command.tpp.rules_global_count", TppConfigManager.useCount))
                 .append(Component.literal("\n"))
-                .append(Component.translatable("carpetprimaryuan.command.tpp.rules_no_station_counts"));
+                .append(ServerI18n.tr(source, "carpetprimaryuan.command.tpp.rules_no_station_counts"));
         source.sendSuccess(() -> message, false);
         return 1;
     }

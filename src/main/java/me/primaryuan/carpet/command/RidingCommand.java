@@ -4,10 +4,10 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.primaryuan.carpet.CarpetPrimaryuanSettings;
 import me.primaryuan.carpet.handler.entitiesRidingPlayers.EntitiesRidingPlayersHandler;
+import me.primaryuan.carpet.i18n.ServerI18n;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 public class RidingCommand {
@@ -51,7 +51,7 @@ public class RidingCommand {
         ServerPlayer player = context.getSource().getPlayerOrException();
 
         EntitiesRidingPlayersHandler.setRidePermission(player.getName().getString(), true);
-        broadcast(context.getSource(), Component.translatable("carpetprimaryuan.command.ride.allow_ride", player.getName().getString()));
+        broadcast(context.getSource(), "carpetprimaryuan.command.ride.allow_ride", player.getName().getString());
         return 1;
     }
 
@@ -59,7 +59,7 @@ public class RidingCommand {
         ServerPlayer player = context.getSource().getPlayerOrException();
 
         EntitiesRidingPlayersHandler.setRidePermission(player.getName().getString(), false);
-        broadcast(context.getSource(), Component.translatable("carpetprimaryuan.command.ride.disallow_ride", player.getName().getString()));
+        broadcast(context.getSource(), "carpetprimaryuan.command.ride.disallow_ride", player.getName().getString());
         return 1;
     }
 
@@ -67,7 +67,7 @@ public class RidingCommand {
         ServerPlayer player = context.getSource().getPlayerOrException();
 
         EntitiesRidingPlayersHandler.setPickupPermission(player.getName().getString(), true);
-        broadcast(context.getSource(), Component.translatable("carpetprimaryuan.command.ride.allow_pickup", player.getName().getString()));
+        broadcast(context.getSource(), "carpetprimaryuan.command.ride.allow_pickup", player.getName().getString());
         return 1;
     }
 
@@ -75,16 +75,16 @@ public class RidingCommand {
         ServerPlayer player = context.getSource().getPlayerOrException();
 
         EntitiesRidingPlayersHandler.setPickupPermission(player.getName().getString(), false);
-        broadcast(context.getSource(), Component.translatable("carpetprimaryuan.command.ride.disallow_pickup", player.getName().getString()));
+        broadcast(context.getSource(), "carpetprimaryuan.command.ride.disallow_pickup", player.getName().getString());
         return 1;
     }
 
     /**
-     * 向全服玩家广播消息
+     * 向全服玩家广播消息，按每个玩家自身语言翻译
      */
-    private static void broadcast(CommandSourceStack source, Component message) {
+    private static void broadcast(CommandSourceStack source, String key, Object... args) {
         for (ServerPlayer p : source.getServer().getPlayerList().getPlayers()) {
-            p.sendSystemMessage(message);
+            p.sendSystemMessage(ServerI18n.tr(p, key, args));
         }
     }
 }
