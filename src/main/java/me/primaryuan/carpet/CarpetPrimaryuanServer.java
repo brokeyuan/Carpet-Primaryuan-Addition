@@ -9,7 +9,6 @@ import me.primaryuan.carpet.command.HatCommand;
 import me.primaryuan.carpet.command.RidingCommand;
 import me.primaryuan.carpet.command.TppCommand;
 import me.primaryuan.carpet.handler.entitiesRidingPlayers.EntitiesRidingPlayersHandler;
-import me.primaryuan.carpet.i18n.ServerI18n;
 import me.primaryuan.carpet.settings.CarpetRuleRegistrar;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -46,7 +45,6 @@ public class CarpetPrimaryuanServer implements CarpetExtension {
     @Override
     public void onGameStarted() {
         LOGGER.info(fancyName + " " + CarpetPrimaryuanMod.getVersion() + " loaded");
-        ServerI18n.init();
         CarpetRuleRegistrar.register(CarpetPrimaryuanSettings.class);
         LOGGER.info("fakePlayerNameSuggestions feature enabled");
         TppCommand.register();
