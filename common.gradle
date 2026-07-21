@@ -29,6 +29,7 @@ dependencies {
 		return dep
 	}
 	def autoImplementation = { Object... args -> processDependency(unobfuscated ? implementation(*args) : modImplementation(*args)) }
+	def autoRuntimeOnly = { Object... args -> processDependency(unobfuscated ? runtimeOnly(*args) : modRuntimeOnly(*args)) }
 
 	// Minecraft
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
