@@ -1,0 +1,104 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    inputs:
+      target_subproject:
+        description: |-
+          要发布的子项目名称，逗号分隔
+          留空则发布所有子项目
+        type: string
+        required: false
+        default: ''
+      target_release_tag:
+        description: 目标 Release 标签（如 v1.1.2）
+        type: string
+        required: true
+
+
+jobs:
+  show_action_parameters:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show action parameters
+        run: |
+          cat <<EOF >> $GITHUB_STEP_SUMMARY
+          ## Action Parameters
+          - Trigger: \`${{ github.event_name }}\`
+          - Tag/Ref: \`${{ github.ref_name }}\`
+          - target_subproject: \`${{ github.event.inputs.target_subproject || 'all' }}\`
+          - target_release_tag: \`${{ github.event.inputs.target_release_tag || github.ref_name }}\`
+          EOF
+
+  matrix_prep:
+    needs: show_action_parameters
+    uses: ./.github/workflows/matrix_prep.yml
+    with:
+      target_subproject: ${{ github.event.inputs.target_subproject || '' }}
+
+  build:
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+    with:
+      target_subproject: ${{ github.event.inputs.target_subproject || '' }}
+      release: true
+
+  release:
+    needs:
+      - matrix_prep
+      - build
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    strategy:
+      matrix: ${{ fromJson(needs.matrix_prep.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: build-artifacts
+          path: build-artifacts
+
+      - name: Determine release tag
+        id: release_tag
+        run: |
+          TAG="${{ github.event.inputs.target_release_tag || github.ref_name }}"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Using release tag: $TAG"
+
+      - name: Prepare file information
+        id: file_info
+        run: |
+          shopt -s extglob
+          FILE_PATH=$(ls ${{ format('build-artifacts/{0}/build/libs/!(*-@(dev|sources|shadow)).jar', matrix.subproject) }})
+          
+          FILE_NAME=$(basename $FILE_PATH)
+          FILE_HASH=$(sha256sum $FILE_PATH | awk '{ print $1 }')
+          echo "path=$FILE_PATH" >> $GITHUB_OUTPUT
+          echo "name=$FILE_NAME" >> $GITHUB_OUTPUT
+          echo "hash=$FILE_HASH" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.release_tag.outputs.tag }}
+          files: ${{ steps.file_info.outputs.path }}
+          fail_on_unmatched_files: true
+          body: |-
+            ## Build Information
+
+            - File name: `${{ steps.file_info.outputs.name }}`
+            - SHA-256: `${{ steps.file_info.outputs.hash }}`
+            - Built from: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
