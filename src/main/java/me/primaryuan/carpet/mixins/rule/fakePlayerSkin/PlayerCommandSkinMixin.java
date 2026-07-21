@@ -67,6 +67,8 @@ public class PlayerCommandSkinMixin {
             applySkinToFakePlayerReflection(server, fakePlayer, skinTargetName);
 
         } catch (Exception e) {
+            System.err.println("[PRY] 皮肤 afterSpawn 异常: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -90,7 +92,10 @@ public class PlayerCommandSkinMixin {
             refreshPlayerMethod.invoke(null, targetPlayer);
 
         } catch (ClassNotFoundException e) {
+            System.err.println("[PRY] SkinRestorer 类未找到，皮肤功能不可用: " + e.getMessage());
         } catch (Exception e) {
+            System.err.println("[PRY] 皮肤设置失败: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

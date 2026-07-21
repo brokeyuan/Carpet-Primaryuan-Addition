@@ -96,10 +96,14 @@ public class PlayerCommandSkinMixin {
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } catch (Exception e) {
+                    System.err.println("[PRY] 皮肤轮询线程异常: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }).start();
 
         } catch (Exception e) {
+            System.err.println("[PRY] 皮肤 afterSpawn 异常: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -133,16 +137,24 @@ public class PlayerCommandSkinMixin {
                                 Method refreshPlayerMethod = playerUtilsClass.getMethod("refreshPlayer", ServerPlayer.class);
                                 refreshPlayerMethod.invoke(null, fakePlayer);
                             } catch (ClassNotFoundException e) {
+                                System.err.println("[PRY] PlayerUtils 类未找到: " + e.getMessage());
                             } catch (Exception e) {
+                                System.err.println("[PRY] 刷新皮肤失败: " + e.getMessage());
+                                e.printStackTrace();
                             }
                         });
                     }
                 } catch (Exception e) {
+                    System.err.println("[PRY] 检查皮肤设置结果失败: " + e.getMessage());
+                    e.printStackTrace();
                 }
             });
 
         } catch (ClassNotFoundException e) {
+            System.err.println("[PRY] SkinRestorer 类未找到，皮肤功能不可用: " + e.getMessage());
         } catch (Exception e) {
+            System.err.println("[PRY] 皮肤设置失败: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
