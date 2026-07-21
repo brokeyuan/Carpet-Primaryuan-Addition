@@ -7,7 +7,7 @@ on:
       - "gradle.properties"
       - "src/**"
       - "versions/**"
-      - ".github/workflows"
+      - ".github/workflows/**"
   pull_request:
   workflow_dispatch:
 
