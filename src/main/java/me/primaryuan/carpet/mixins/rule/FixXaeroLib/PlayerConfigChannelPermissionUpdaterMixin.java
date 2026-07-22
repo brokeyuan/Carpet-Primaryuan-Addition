@@ -1,4 +1,4 @@
-package me.primaryuan.carpet.mixins.rule.xaerolibFix;
+package me.primaryuan.carpet.mixins.rule.FixXaeroLib;
 
 import me.primaryuan.carpet.CarpetPrimaryuanSettings;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +20,7 @@ public class PlayerConfigChannelPermissionUpdaterMixin {
         remap = false
     )
     private static void onHandleHead(@Coerce Object player, boolean isOp, CallbackInfo ci) {
-        if (CarpetPrimaryuanSettings.xaerolibFix) {
+        if (CarpetPrimaryuanSettings.FixXaeroLib) {
             String className = player.getClass().getName();
             if (className.contains("EntityPlayerMPFake") || className.contains("FakePlayer")) {
                 ci.cancel();

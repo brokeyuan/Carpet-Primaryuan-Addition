@@ -8,13 +8,19 @@
 
 ## Quick Navigation
 
-- [Fake Player](#fake-player)
+- [Fake Player (BOT)](#fake-player-bot)
   - [TppFakePlayer - Fake Player Pearl Station Teleport](#tppfakeplayer---fake-player-pearl-station-teleport)
   - [fakePlayerNameSuggestions - Fake Player Name Suggestions](#fakeplayernamesuggestions---fake-player-name-suggestions)
   - [fakePlayerSkinMode - Fake Player Skin Setting](#fakeplayerskinmode---fake-player-skin-setting)
   - [fakePlayerSkinSet - Fake Player Unified Skin Setting](#fakeplayerskinset---fake-player-unified-skin-setting)
-  - [xaerolibFix - Fake Player Data XaeroLib Fix](#xaerolibfix---fake-player-data-xaerolib-fix)
-  - [bluemapFix - BlueMap Compatibility Fix](#bluemapfix---bluemap-compatibility-fix)
+- [Bug Fixes (BUGFIX)](#bug-fixes-bugfix)
+  - [FixXaeroLib - XaeroLib Compatibility Patch](#fixxaerolib---xaerolib-compatibility-patch)
+  - [FixBluemap - BlueMap Compatibility Patch](#fixbluemap---bluemap-compatibility-patch)
+- [Ported Features (PORTING)](#ported-features-porting)
+  - [sleepingDuringTheDay - Daydreaming](#sleepingduringtheday---daydreaming)
+  - [unicodeArgumentsSupport - Unicode Argument Support](#unicodeargumentssupport---unicode-argument-support)
+- [Commands (COMMAND)](#commands-command)
+  - [playerhat - Player Hat](#playerhat---player-hat)
 - [Player Interaction](#player-interaction)
   - [ridingPlayers - Riding Players](#ridingplayers---riding-players)
   - [pickupPlayers - Picking Up Players](#pickupplayers---picking-up-players)
@@ -22,16 +28,12 @@
   - [ridingPlayersDismountOnGameModeChange - Dismount on Game Mode Change](#ridingplayersdismountongamemodechange---dismount-on-game-mode-change)
   - [ridingPlayersClientAllowInteractions - Allow Interaction While Riding (Client)](#ridingplayersclientallowinteractions---allow-interaction-while-riding-client)
 - [Survival Features](#survival-features)
-  - [sleepingDuringTheDay - Daydreaming](#sleepingduringtheday---daydreaming)
   - [betterSnowBall - Better Snowball](#bettersnowball---better-snowball)
-  - [playerhat - Player Hat](#playerhat---player-hat)
   - [invisibleInTallGrass - Invisibility Grass](#invisibleintallgrass---invisibility-grass)
-- [Other Features](#other-features)
-  - [unicodeArgumentsSupport - Unicode Argument Support](#unicodeargumentssupport---unicode-argument-support)
 
 ---
 
-## Fake Player
+## Fake Player (BOT)
 
 ### TppFakePlayer - Fake Player Pearl Station Teleport
 
@@ -44,7 +46,7 @@ Use fake players to quickly use pearl teleport stations. When set to true, enabl
 | **Type** | `boolean` |
 | **Default Value** | `false` |
 | **Suggested Options** | `false`, `true` |
-| **Categories** | `PRIMARYUAN`, `CREATIVE`, `SURVIVAL` |
+| **Categories** | `PRIMARYUAN`, `BOT`, `COMMAND` |
 
 ---
 
@@ -59,7 +61,7 @@ Customize the fake player list suggested by /player. Use ',' to separate each na
 | **Type** | `string` |
 | **Default Value** | `Steve,Alex` |
 | **Suggested Options** | `Steve,Alex`, `Pry,hsds`, `Pry,hsds,Firework,Food`, `` |
-| **Categories** | `PRIMARYUAN`, `CREATIVE`, `SURVIVAL` |
+| **Categories** | `PRIMARYUAN`, `BOT` |
 
 ---
 
@@ -74,7 +76,7 @@ After installing the [skinrestorer](https://modrinth.com/mod/skinrestorer) depen
 | **Type** | `string` |
 | **Default Value** | `default` |
 | **Suggested Options** | `default`, `summon`, `same_skin` |
-| **Categories** | `PRIMARYUAN`, `CREATIVE`, `SURVIVAL` |
+| **Categories** | `PRIMARYUAN`, `BOT` |
 
 #### Mode Description
 
@@ -97,37 +99,88 @@ When FakeplayersSkinMode is same_skin, sets the player name used for the fake pl
 | **Type** | `string` |
 | **Default Value** | `Brokeyuan` |
 | **Suggested Options** | `Brokeyuan`, `hsds`, `` |
-| **Categories** | `PRIMARYUAN`, `CREATIVE`, `SURVIVAL` |
+| **Categories** | `PRIMARYUAN`, `BOT` |
 
 ---
 
-### xaerolibFix - Fake Player Data XaeroLib Fix
+## Bug Fixes (BUGFIX)
+
+### FixXaeroLib - XaeroLib Compatibility Patch
 
 Fixes the issue where higher versions of Xaero combined with LuckPerms cause fake player data loss.
 
 | Property | Value |
 |----------|-------|
-| **Rule Name** | `xaerolibFix` |
+| **Rule Name** | `FixXaeroLib` |
 | **Description** | Fixes the issue where higher versions of Xaero combined with LuckPerms cause fake player data loss |
 | **Type** | `boolean` |
 | **Default Value** | `false` |
 | **Suggested Options** | `false`, `true` |
-| **Categories** | `PRIMARYUAN`, `FEATURE` |
+| **Categories** | `PRIMARYUAN`, `BUGFIX` |
 
 ---
 
-### bluemapFix - BlueMap Compatibility Fix
+### FixBluemap - BlueMap Compatibility Patch
 
 Fixes fake players not triggering Fabric API connection events, causing mods like BlueMap to fail tracking fake player join/leave.
 
 | Property | Value |
 |----------|-------|
-| **Rule Name** | `bluemapFix` |
+| **Rule Name** | `FixBluemap` |
 | **Description** | Fixes fake players not triggering Fabric API connection events, causing mods like BlueMap to fail tracking fake player join/leave |
 | **Type** | `boolean` |
 | **Default Value** | `false` |
 | **Suggested Options** | `false`, `true` |
-| **Categories** | `PRIMARYUAN`, `FEATURE` |
+| **Categories** | `PRIMARYUAN`, `BUGFIX` |
+
+---
+
+## Ported Features (PORTING)
+
+### sleepingDuringTheDay - Daydreaming
+
+Allows players to sleep during the day. After sleeping, the time switches to night (referenced from PCA).
+
+| Property | Value |
+|----------|-------|
+| **Rule Name** | `sleepingDuringTheDay` |
+| **Description** | Allows players to sleep during the day. After sleeping, the time switches to night (referenced from PCA) |
+| **Type** | `boolean` |
+| **Default Value** | `false` |
+| **Suggested Options** | `false`, `true` |
+| **Categories** | `PRIMARYUAN`, `PORTING`, `SURVIVAL` |
+
+---
+
+### unicodeArgumentsSupport - Unicode Argument Support
+
+Allows the use of non-ASCII characters in command arguments (Chinese, Japanese, Korean, etc., can be used to summon fake players with Chinese names) (ported from YACA).
+
+| Property | Value |
+|----------|-------|
+| **Rule Name** | `unicodeArgumentsSupport` |
+| **Description** | Allows the use of non-ASCII characters in command arguments (Chinese, Japanese, Korean, etc., can be used to summon fake players with Chinese names) (ported from YACA) |
+| **Type** | `boolean` |
+| **Default Value** | `false` |
+| **Suggested Options** | `false`, `true` |
+| **Categories** | `PRIMARYUAN`, `PORTING` |
+
+---
+
+## Commands (COMMAND)
+
+### playerhat - Player Hat
+
+Allows players to wear items on their head and adds the /hat command. When a Totem of Undying is placed in the head slot, the death protection effect is triggered.
+
+| Property | Value |
+|----------|-------|
+| **Rule Name** | `playerhat` |
+| **Description** | Allows players to wear items on their head and adds the /hat command. When a Totem of Undying is placed in the head slot, the death protection effect is triggered |
+| **Type** | `boolean` |
+| **Default Value** | `false` |
+| **Suggested Options** | `false`, `true` |
+| **Categories** | `PRIMARYUAN`, `SURVIVAL`, `COMMAND` |
 
 ---
 
@@ -210,21 +263,6 @@ Requires client installation. When there are passengers on top, you can still in
 
 ## Survival Features
 
-### sleepingDuringTheDay - Daydreaming
-
-Allows players to sleep during the day. After sleeping, the time switches to night (referenced from PCA).
-
-| Property | Value |
-|----------|-------|
-| **Rule Name** | `sleepingDuringTheDay` |
-| **Description** | Allows players to sleep during the day. After sleeping, the time switches to night (referenced from PCA) |
-| **Type** | `boolean` |
-| **Default Value** | `false` |
-| **Suggested Options** | `false`, `true` |
-| **Categories** | `PRIMARYUAN`, `CREATIVE`, `SURVIVAL` |
-
----
-
 ### betterSnowBall - Better Snowball
 
 Stones in snow. Allows snowballs to deal knockback and damage to players.
@@ -233,21 +271,6 @@ Stones in snow. Allows snowballs to deal knockback and damage to players.
 |----------|-------|
 | **Rule Name** | `betterSnowBall` |
 | **Description** | Stones in snow. Allows snowballs to deal knockback and damage to players |
-| **Type** | `boolean` |
-| **Default Value** | `false` |
-| **Suggested Options** | `false`, `true` |
-| **Categories** | `PRIMARYUAN`, `SURVIVAL`, `FEATURE` |
-
----
-
-### playerhat - Player Hat
-
-Allows players to wear items on their head and adds the /hat command. When a Totem of Undying is placed in the head slot, the death protection effect is triggered.
-
-| Property | Value |
-|----------|-------|
-| **Rule Name** | `playerhat` |
-| **Description** | Allows players to wear items on their head and adds the /hat command. When a Totem of Undying is placed in the head slot, the death protection effect is triggered |
 | **Type** | `boolean` |
 | **Default Value** | `false` |
 | **Suggested Options** | `false`, `true` |
@@ -267,20 +290,3 @@ Automatically makes the player invisible when their head is located in tall gras
 | **Default Value** | `false` |
 | **Suggested Options** | `false`, `true` |
 | **Categories** | `PRIMARYUAN`, `SURVIVAL`, `FEATURE` |
-
----
-
-## Other Features
-
-### unicodeArgumentsSupport - Unicode Argument Support
-
-Allows the use of non-ASCII characters in command arguments (Chinese, Japanese, Korean, etc., can be used to summon fake players with Chinese names) (ported from YACA).
-
-| Property | Value |
-|----------|-------|
-| **Rule Name** | `unicodeArgumentsSupport` |
-| **Description** | Allows the use of non-ASCII characters in command arguments (Chinese, Japanese, Korean, etc., can be used to summon fake players with Chinese names) (ported from YACA) |
-| **Type** | `boolean` |
-| **Default Value** | `false` |
-| **Suggested Options** | `false`, `true` |
-| **Categories** | `PRIMARYUAN`, `FEATURE` |

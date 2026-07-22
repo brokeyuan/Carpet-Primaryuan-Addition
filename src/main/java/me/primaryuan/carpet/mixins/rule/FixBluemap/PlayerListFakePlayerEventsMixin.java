@@ -1,4 +1,4 @@
-package me.primaryuan.carpet.mixins.rule.bluemapFix;
+package me.primaryuan.carpet.mixins.rule.FixBluemap;
 
 import carpet.patches.EntityPlayerMPFake;
 import carpet.patches.NetHandlerPlayServerFake;
@@ -26,8 +26,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PlayerListFakePlayerEventsMixin {
 
     @Inject(method = "placeNewPlayer", at = @At("RETURN"))
-    private void bluemapFix$onPlaceNewPlayer(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci) {
-        if (!CarpetPrimaryuanSettings.bluemapFix) return;
+    private void fixBluemap$onPlaceNewPlayer(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci) {
+        if (!CarpetPrimaryuanSettings.FixBluemap) return;
         if (player instanceof EntityPlayerMPFake && player.connection instanceof NetHandlerPlayServerFake) {
             MinecraftServer server = ((PlayerList) (Object) this).getServer();
             ServerPlayConnectionEvents.JOIN.invoker().onPlayReady(player.connection, null, server);
@@ -35,8 +35,8 @@ public class PlayerListFakePlayerEventsMixin {
     }
 
     @Inject(method = "remove", at = @At("HEAD"))
-    private void bluemapFix$onRemovePlayer(ServerPlayer player, CallbackInfo ci) {
-        if (!CarpetPrimaryuanSettings.bluemapFix) return;
+    private void fixBluemap$onRemovePlayer(ServerPlayer player, CallbackInfo ci) {
+        if (!CarpetPrimaryuanSettings.FixBluemap) return;
         if (player instanceof EntityPlayerMPFake && player.connection instanceof NetHandlerPlayServerFake) {
             MinecraftServer server = ((PlayerList) (Object) this).getServer();
             ServerPlayConnectionEvents.DISCONNECT.invoker().onPlayDisconnect(player.connection, server);
