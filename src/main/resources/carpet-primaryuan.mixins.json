@@ -16,6 +16,7 @@
     "rule.sleepingDuringTheDay.MixinPlayerBase",
     "rule.unicodeArgument.StringReaderUnicodeSupportMixin",
     "rule.xaerolibFix.PlayerConfigChannelPermissionUpdaterMixin",
+    "rule.bluemapFix.PlayerListFakePlayerEventsMixin",
     "rule.playerhat.LivingEntityMixin",
     "rule.betterSnowBall.SnowballMixin"
   ],

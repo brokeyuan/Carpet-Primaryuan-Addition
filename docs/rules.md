@@ -14,6 +14,7 @@
   - [fakePlayerSkinMode - 假人皮肤设置](#fakeplayerskinmode---假人皮肤设置)
   - [fakePlayerSkinSet - 假人统一皮肤设置](#fakeplayerskinset---假人统一皮肤设置)
   - [xaerolibFix - 假人数据XaeroLib修复](#xaerolibfix---假人数据xaerolib修复)
+  - [bluemapFix - BlueMap兼容修复](#bluemapfix---bluemap兼容修复)
 - [玩家交互](#玩家交互)
   - [ridingPlayers - 骑乘玩家](#ridingplayers---骑乘玩家)
   - [pickupPlayers - 捡起玩家](#pickupplayers---捡起玩家)
@@ -108,6 +109,21 @@
 |------|-----|
 | **规则名** | `xaerolibFix` |
 | **描述** | 修复高版本Xaero 搭配LuckPerms 会导致假人数据丢失的问题 |
+| **类型** | `boolean` |
+| **默认值** | `false` |
+| **参考选项** | `false`, `true` |
+| **分类** | `PRIMARYUAN`, `FEATURE` |
+
+---
+
+### bluemapFix - BlueMap兼容修复
+
+修复假人不触发Fabric API连接事件导致BlueMap等模组无法正确追踪假人上下线的问题。
+
+| 属性 | 值 |
+|------|-----|
+| **规则名** | `bluemapFix` |
+| **描述** | 修复假人不触发Fabric API连接事件导致BlueMap等模组无法正确追踪假人上下线的问题 |
 | **类型** | `boolean` |
 | **默认值** | `false` |
 | **参考选项** | `false`, `true` |

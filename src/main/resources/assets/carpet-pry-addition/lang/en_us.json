@@ -9,6 +9,8 @@
   "carpet.rule.fakePlayerSkinSet.desc": "When fakePlayerSkinMode is same_skin, set the player name used for fake player skins",
   "carpet.rule.xaerolibFix.name": "XaeroLib Fake Player Fix",
   "carpet.rule.xaerolibFix.desc": "Fix fake player data loss issue with newer Xaero versions when used with LuckPerms",
+  "carpet.rule.bluemapFix.name": "BlueMap Compatibility Fix",
+  "carpet.rule.bluemapFix.desc": "Fix fake players not triggering Fabric API connection events, causing mods like BlueMap to fail tracking fake player join/leave",
   "carpet.rule.invisibleInTallGrass.name": "Invisible in Tall Grass",
   "carpet.rule.invisibleInTallGrass.desc": "Players become invisible when their head is in tall grass",
   "carpet.rule.playerhat.name": "Player Hat",

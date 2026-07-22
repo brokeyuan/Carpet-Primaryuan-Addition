@@ -43,6 +43,11 @@ public class CarpetPrimaryuanSettings {
     public static boolean xaerolibFix = false;
 
     @Rule(
+            categories = {PRIMARYUAN, FEATURE}
+    )
+    public static boolean bluemapFix = false;
+
+    @Rule(
             categories = {PRIMARYUAN, SURVIVAL, FEATURE}
     )
     public static boolean invisibleInTallGrass = false;

@@ -14,6 +14,7 @@
   - [fakePlayerSkinMode - Fake Player Skin Setting](#fakeplayerskinmode---fake-player-skin-setting)
   - [fakePlayerSkinSet - Fake Player Unified Skin Setting](#fakeplayerskinset---fake-player-unified-skin-setting)
   - [xaerolibFix - Fake Player Data XaeroLib Fix](#xaerolibfix---fake-player-data-xaerolib-fix)
+  - [bluemapFix - BlueMap Compatibility Fix](#bluemapfix---bluemap-compatibility-fix)
 - [Player Interaction](#player-interaction)
   - [ridingPlayers - Riding Players](#ridingplayers---riding-players)
   - [pickupPlayers - Picking Up Players](#pickupplayers---picking-up-players)
@@ -108,6 +109,21 @@ Fixes the issue where higher versions of Xaero combined with LuckPerms cause fak
 |----------|-------|
 | **Rule Name** | `xaerolibFix` |
 | **Description** | Fixes the issue where higher versions of Xaero combined with LuckPerms cause fake player data loss |
+| **Type** | `boolean` |
+| **Default Value** | `false` |
+| **Suggested Options** | `false`, `true` |
+| **Categories** | `PRIMARYUAN`, `FEATURE` |
+
+---
+
+### bluemapFix - BlueMap Compatibility Fix
+
+Fixes fake players not triggering Fabric API connection events, causing mods like BlueMap to fail tracking fake player join/leave.
+
+| Property | Value |
+|----------|-------|
+| **Rule Name** | `bluemapFix` |
+| **Description** | Fixes fake players not triggering Fabric API connection events, causing mods like BlueMap to fail tracking fake player join/leave |
 | **Type** | `boolean` |
 | **Default Value** | `false` |
 | **Suggested Options** | `false`, `true` |

@@ -9,6 +9,8 @@
   "carpet.rule.fakePlayerSkinSet.desc": "當FakeplayersSkinMode為same_skin時，設定用於假人皮膚的玩家名稱",
   "carpet.rule.xaerolibFix.name": "假人資料XaeroLib修復",
   "carpet.rule.xaerolibFix.desc": "修復高版本Xaero 搭配LuckPerms 會導致假人資料遺失的問題",
+  "carpet.rule.bluemapFix.name": "BlueMap相容修復",
+  "carpet.rule.bluemapFix.desc": "修復假人不觸發Fabric API連線事件導致BlueMap等模組無法正確追蹤假人上下線的問題",
   "carpet.rule.invisibleInTallGrass.name": "隱身草",
   "carpet.rule.invisibleInTallGrass.desc": "玩家頭部位於高草叢時自動隱形",
   "carpet.rule.playerhat.name": "玩家帽子",
